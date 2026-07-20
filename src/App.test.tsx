@@ -16,4 +16,10 @@ describe('App', () => {
     // The HUD re-renders with the tavern button now marked active.
     expect(screen.getByRole('button', { name: /tavern noticeboard/i })).toHaveAttribute('aria-pressed', 'true');
   });
+
+  it('switches to the dungeon scene and marks its button active', async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole('button', { name: /dungeon tablet/i }));
+    expect(screen.getByRole('button', { name: /dungeon tablet/i })).toHaveAttribute('aria-pressed', 'true');
+  });
 });

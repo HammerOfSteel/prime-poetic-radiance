@@ -6,6 +6,8 @@ import { Kitchen } from './scene/Kitchen';
 import { Fridge } from './scene/Fridge';
 import { TavernRoom } from './scene/TavernRoom';
 import { TavernNoticeboard } from './scene/TavernNoticeboard';
+import { DungeonRoom } from './scene/DungeonRoom';
+import { DungeonTablet } from './scene/DungeonTablet';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
 import { TransitionOverlay } from './scene/TransitionOverlay';
@@ -13,10 +15,19 @@ import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
 import { useSceneStore } from './state/sceneStore';
 import { useEnvironmentSync } from './state/useEnvironmentSync';
-import { SCENES } from './engine/scenes';
+import { SCENES, type SceneId } from './engine/scenes';
 
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
 const DEFAULT_ZOOMED_OUT_TARGET: [number, number, number] = [0, 3, 0];
+
+/** Maps each scene id to its room (static environment) and board (magnet
+ * surface) component pair. Adding a future scene only requires an entry
+ * here, not a restructured conditional. */
+const SCENE_COMPONENTS: Record<SceneId, { Room: () => React.JSX.Element; Board: () => React.JSX.Element }> = {
+  kitchen: { Room: Kitchen, Board: Fridge },
+  tavern: { Room: TavernRoom, Board: TavernNoticeboard },
+  dungeon: { Room: DungeonRoom, Board: DungeonTablet },
+};
 
 function CameraRig({
   isZoomedIn,
@@ -73,6 +84,7 @@ function App() {
 
   const activeScene = SCENES[activeSceneId];
   const cameraTarget = isZoomedIn ? activeScene.cameraTarget : DEFAULT_ZOOMED_OUT_TARGET;
+  const { Room: ActiveRoom, Board: ActiveBoard } = SCENE_COMPONENTS[activeSceneId];
 
   return (
     <div data-testid="app-root" style={{ width: '100vw', height: '100vh' }}>
@@ -91,17 +103,8 @@ function App() {
             onOverlayProgress={setOverlayProgress}
           />
           <Lighting />
-          {activeSceneId === 'kitchen' ? (
-            <>
-              <Kitchen />
-              <Fridge />
-            </>
-          ) : (
-            <>
-              <TavernRoom />
-              <TavernNoticeboard />
-            </>
-          )}
+          <ActiveRoom />
+          <ActiveBoard />
           <OrbitControls
             target={cameraTarget}
             enabled={isZoomedIn && !isTweening}
