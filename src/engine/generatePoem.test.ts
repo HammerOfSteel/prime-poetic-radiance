@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { generatePoem } from './generatePoem';
-import { WORDS, CATEGORIES } from './wordBank';
+import { generatePoem, pickWeightedRandom } from './generatePoem';
+import { WORDS, CATEGORIES, getThemeWeight } from './wordBank';
 import { TEMPLATES } from './templates';
 
 describe('generatePoem', () => {
@@ -43,5 +43,51 @@ describe('generatePoem', () => {
     const result = generatePoem(WORDS);
     const matchesSomeTemplate = TEMPLATES.some((template) => template.length >= result.length);
     expect(matchesSomeTemplate).toBe(true);
+  });
+});
+
+describe('pickWeightedRandom', () => {
+  it('picks the first item when rng returns 0', () => {
+    const items = [
+      { value: 'a', weight: 1 },
+      { value: 'b', weight: 3 },
+    ];
+    const result = pickWeightedRandom(items, (i) => i.weight, () => 0);
+    expect(result?.value).toBe('a');
+  });
+
+  it('biases selection toward higher-weight items', () => {
+    const items = [
+      { value: 'a', weight: 1 },
+      { value: 'b', weight: 3 },
+    ];
+    // total weight = 4; rng() = 0.5 -> remaining = 2, which falls past item
+    // 'a' (weight 1) and into item 'b' (weight 3), so 'b' is chosen.
+    const result = pickWeightedRandom(items, (i) => i.weight, () => 0.5);
+    expect(result?.value).toBe('b');
+  });
+
+  it('excludes zero-weight items from the draw', () => {
+    const items = [
+      { value: 'a', weight: 0 },
+      { value: 'b', weight: 1 },
+    ];
+    const result = pickWeightedRandom(items, (i) => i.weight, () => 0);
+    expect(result?.value).toBe('b');
+  });
+
+  it('returns undefined when given an empty list', () => {
+    const result = pickWeightedRandom<{ value: string; weight: number }>([], (i) => i.weight, () => 0);
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('generatePoem theme weighting', () => {
+  it('weights kitchen-relevant nouns like "fridge" above neutral nouns like "dog"', () => {
+    expect(getThemeWeight('fridge', 'kitchen')).toBeGreaterThan(getThemeWeight('dog', 'kitchen'));
+  });
+
+  it('accepts an explicit theme option without throwing', () => {
+    expect(() => generatePoem(['the', 'is'], { theme: 'kitchen', rng: () => 0 })).not.toThrow();
   });
 });
