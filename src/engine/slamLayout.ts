@@ -1,6 +1,10 @@
 import { measureWordTextureWidth } from '../engine/wordSizing';
 
-const START_X = 2.8;
+// POC_2.html's original slam layout started words at world-space x=2.8
+// (its fridge stood at world x~4, no group wrapper). This app nests the
+// board in a group at BOARD_GROUP_POSITION ([4, 0, -3.5]; see scenes.ts),
+// so words must be laid out in that group's LOCAL space: 2.8 - 4 = -1.2.
+const START_X = -1.2;
 const PADDING = 0.1;
 
 export interface SlamLayoutEntry {

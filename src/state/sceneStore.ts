@@ -25,6 +25,7 @@ export interface SceneState {
   setDraggedMagnetId: (id: string | null) => void;
   setActiveScene: (id: SceneId) => void;
   updateMagnetPosition: (sceneId: SceneId, index: number, position: [number, number, number]) => void;
+  regenerateMagnetLayout: (sceneId: SceneId) => void;
 }
 
 function layoutForScene(id: SceneId): MagnetLayoutEntry[] {
@@ -69,4 +70,11 @@ export const useSceneStore = create<SceneState>((set, get) => ({
         },
       };
     }),
+  /** Replaces a scene's magnet layout with a freshly-picked set of words at
+   * new scattered positions. Used by the Tesseract "shuffle" button once
+   * its explode-out animation finishes. */
+  regenerateMagnetLayout: (sceneId) =>
+    set((state) => ({
+      magnetLayoutBySceneId: { ...state.magnetLayoutBySceneId, [sceneId]: layoutForScene(sceneId) },
+    })),
 }));

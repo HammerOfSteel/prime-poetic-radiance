@@ -22,6 +22,7 @@ export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPositi
   const scene = SCENES[sceneId];
   const layout = useSceneStore((state) => state.magnetLayoutBySceneId[sceneId]) ?? [];
   const updateMagnetPosition = useSceneStore((state) => state.updateMagnetPosition);
+  const regenerateMagnetLayout = useSceneStore((state) => state.regenerateMagnetLayout);
 
   const meshRefs = useRef(new Map<string, THREE.Object3D>());
 
@@ -39,6 +40,7 @@ export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPositi
           word={word}
           initialPosition={position}
           surfaceZ={scene.magnetSurfaceZ}
+          bounds={scene.magnetBoardBounds}
           onMeshReady={(mesh) => registerMesh(word, mesh)}
           onPositionChange={(next) => updateMagnetPosition(sceneId, index, next)}
         />
@@ -51,6 +53,7 @@ export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPositi
       <TesseractButton
         position={tesseractButtonPosition}
         getMagnetMeshes={() => Array.from(meshRefs.current.values())}
+        onShuffleComplete={() => regenerateMagnetLayout(sceneId)}
       />
     </>
   );

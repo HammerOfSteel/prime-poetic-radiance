@@ -15,6 +15,6 @@ describe('computeSlamLayout', () => {
   it('starts the first word at the configured start X', () => {
     const layout = computeSlamLayout(['cat']);
     expect(layout[0].word).toBe('cat');
-    expect(layout[0].x).toBeGreaterThanOrEqual(2.8);
+    expect(layout[0].x).toBeGreaterThanOrEqual(-1.2);
   });
 });

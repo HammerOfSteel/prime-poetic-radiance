@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import { MagnetBoard } from './MagnetBoard';
-import { SCENES } from '../engine/scenes';
+import { SCENES, BOARD_GROUP_POSITION } from '../engine/scenes';
 import { createToonGradientMap } from './toonGradient';
 
 export function Fridge() {
@@ -9,7 +9,7 @@ export function Fridge() {
   const doorZ = SCENES.kitchen.magnetSurfaceZ;
 
   return (
-    <group position={[4, 0, -3.5]}>
+    <group position={BOARD_GROUP_POSITION}>
       <RoundedBox args={[3.5, 8, 3]} radius={0.1} smoothness={4} position={[0, 4, 0]} castShadow receiveShadow>
         <meshToonMaterial color="#f6d98a" gradientMap={gradientMap} />
       </RoundedBox>

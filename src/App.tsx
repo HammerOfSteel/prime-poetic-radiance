@@ -82,6 +82,7 @@ function App() {
   const activeSceneId = useSceneStore((state) => state.activeSceneId);
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
   const zoomIn = useSceneStore((state) => state.zoomIn);
+  const draggedMagnetId = useSceneStore((state) => state.draggedMagnetId);
   const [isTweening, setIsTweening] = useState(false);
   const [overlayProgress, setOverlayProgress] = useState(0);
   const [proceduralBlueprint, setProceduralBlueprint] = useState<RoomBlueprint | null>(null);
@@ -106,6 +107,7 @@ function App() {
         <Canvas
           camera={{ position: CAMERA_ZOOMED_OUT, fov: 45, near: 0.1, far: 1000 }}
           shadows
+          gl={{ toneMappingExposure: 3.2 }}
           onPointerMissed={() => {
             if (!isZoomedIn) zoomIn();
           }}
@@ -127,7 +129,14 @@ function App() {
           )}
           <OrbitControls
             target={cameraTarget}
-            enabled={isZoomedIn && !isTweening}
+            // Must stay disabled while a magnet is being dragged: R3F's
+            // per-mesh event.stopPropagation() only stops other R3F pointer
+            // handlers from firing, it doesn't stop OrbitControls' own
+            // native listeners on the canvas element, so without this the
+            // camera would orbit at the same time the magnet is dragged
+            // (mirrors POC_2's explicit `controls.enabled = false` while
+            // dragging a magnet).
+            enabled={isZoomedIn && !isTweening && !draggedMagnetId}
             minDistance={5}
             maxDistance={25}
             maxPolarAngle={Math.PI / 2 - 0.05}
