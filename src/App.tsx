@@ -25,6 +25,7 @@ function CameraRig({
 }) {
   const { camera } = useThree();
   const overlayTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     const [x, y, z] = isZoomedIn ? CAMERA_ZOOMED_IN : CAMERA_ZOOMED_OUT;
@@ -40,12 +41,17 @@ function CameraRig({
     });
 
     overlayTimelineRef.current?.kill();
-    const overlay = { progress: 0 };
-    overlayTimelineRef.current = gsap
-      .timeline({ onUpdate: () => onOverlayProgress(overlay.progress) })
-      .to(overlay, { progress: 1, duration: 0.25, ease: 'power1.in' })
-      .to(overlay, { progress: 1, duration: 0.1 })
-      .to(overlay, { progress: 0, duration: 0.25, ease: 'power1.out' });
+
+    if (!isInitialMount.current) {
+      const overlay = { progress: 0 };
+      overlayTimelineRef.current = gsap
+        .timeline({ onUpdate: () => onOverlayProgress(overlay.progress) })
+        .to(overlay, { progress: 1, duration: 0.25, ease: 'power1.in' })
+        .to(overlay, { progress: 1, duration: 0.1 })
+        .to(overlay, { progress: 0, duration: 0.25, ease: 'power1.out' });
+    } else {
+      isInitialMount.current = false;
+    }
   }, [camera, isZoomedIn, onTweenChange, onOverlayProgress]);
 
   return null;
