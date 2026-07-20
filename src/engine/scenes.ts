@@ -1,7 +1,7 @@
 import type { WordTheme } from './wordBank';
 import type { LightingPreset } from './lightingPresets';
 
-export type SceneId = 'kitchen' | 'tavern';
+export type SceneId = 'kitchen' | 'tavern' | 'dungeon';
 
 export interface SceneDefinition {
   id: SceneId;
@@ -24,7 +24,7 @@ export interface SceneDefinition {
   fixedLightingPreset: LightingPreset | null;
 }
 
-export const SCENE_IDS: SceneId[] = ['kitchen', 'tavern'];
+export const SCENE_IDS: SceneId[] = ['kitchen', 'tavern', 'dungeon'];
 
 export const SCENES: Record<SceneId, SceneDefinition> = {
   kitchen: {
@@ -56,5 +56,16 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
       fillIntensity: 1.1,
       directionalPosition: { x: 3, y: 4, z: 4 },
     },
+  },
+  dungeon: {
+    id: 'dungeon',
+    label: 'Dungeon Tablet',
+    wordTheme: 'dungeon',
+    magnetSurfaceZ: -1.84,
+    magnetCount: 30,
+    cameraZoomedIn: [4, 5, 3.5],
+    cameraTarget: [4, 5, -1.85],
+    usesEnvironmentLighting: true,
+    fixedLightingPreset: null,
   },
 };
