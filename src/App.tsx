@@ -8,14 +8,17 @@ import { TavernRoom } from './scene/TavernRoom';
 import { TavernNoticeboard } from './scene/TavernNoticeboard';
 import { DungeonRoom } from './scene/DungeonRoom';
 import { DungeonTablet } from './scene/DungeonTablet';
+import { ProceduralRoom } from './scene/ProceduralRoom';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
 import { TransitionOverlay } from './scene/TransitionOverlay';
 import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
+import { BlueprintDebugPanel } from './ui/BlueprintDebugPanel';
 import { useSceneStore } from './state/sceneStore';
 import { useEnvironmentSync } from './state/useEnvironmentSync';
 import { SCENES, type SceneId } from './engine/scenes';
+import { generateRoomBlueprint, type RoomBlueprint } from './engine/blueprintGenerator';
 
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
 const DEFAULT_ZOOMED_OUT_TARGET: [number, number, number] = [0, 3, 0];
@@ -81,10 +84,21 @@ function App() {
   const zoomIn = useSceneStore((state) => state.zoomIn);
   const [isTweening, setIsTweening] = useState(false);
   const [overlayProgress, setOverlayProgress] = useState(0);
+  const [proceduralBlueprint, setProceduralBlueprint] = useState<RoomBlueprint | null>(null);
 
   const activeScene = SCENES[activeSceneId];
   const cameraTarget = isZoomedIn ? activeScene.cameraTarget : DEFAULT_ZOOMED_OUT_TARGET;
   const { Room: ActiveRoom, Board: ActiveBoard } = SCENE_COMPONENTS[activeSceneId];
+
+  const handleGenerateProceduralRoom = () => {
+    const seed = Math.floor(Math.random() * 1e9);
+    console.log(`Generated procedural room with seed: ${seed}`);
+    setProceduralBlueprint(generateRoomBlueprint(seed));
+  };
+
+  const handleExitProceduralRoom = () => {
+    setProceduralBlueprint(null);
+  };
 
   return (
     <div data-testid="app-root" style={{ width: '100vw', height: '100vh' }}>
@@ -103,8 +117,14 @@ function App() {
             onOverlayProgress={setOverlayProgress}
           />
           <Lighting />
-          <ActiveRoom />
-          <ActiveBoard />
+          {proceduralBlueprint ? (
+            <ProceduralRoom blueprint={proceduralBlueprint} />
+          ) : (
+            <>
+              <ActiveRoom />
+              <ActiveBoard />
+            </>
+          )}
           <OrbitControls
             target={cameraTarget}
             enabled={isZoomedIn && !isTweening}
@@ -115,7 +135,12 @@ function App() {
         </Canvas>
       </CanvasErrorBoundary>
       <TransitionOverlay progress={overlayProgress} />
-      <HUD />
+      {proceduralBlueprint === null && <HUD />}
+      <BlueprintDebugPanel
+        activeSeed={proceduralBlueprint?.seed ?? null}
+        onGenerate={handleGenerateProceduralRoom}
+        onExit={handleExitProceduralRoom}
+      />
       <StepBackButton />
     </div>
   );

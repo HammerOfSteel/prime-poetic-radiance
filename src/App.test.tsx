@@ -22,4 +22,14 @@ describe('App', () => {
     await userEvent.click(screen.getByRole('button', { name: /dungeon tablet/i }));
     expect(screen.getByRole('button', { name: /dungeon tablet/i })).toHaveAttribute('aria-pressed', 'true');
   });
+
+  it('generates a procedural room, hides the normal HUD, and returns via Back to Scenes', async () => {
+    render(<App />);
+    await userEvent.click(screen.getByRole('button', { name: /generate random room/i }));
+    expect(screen.getByText(/seed:/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /kitchen fridge/i })).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /back to scenes/i }));
+    expect(screen.getByRole('button', { name: /kitchen fridge/i })).toBeInTheDocument();
+  });
 });
