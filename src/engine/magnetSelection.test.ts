@@ -24,9 +24,9 @@ describe('selectMagnetWords', () => {
   it('weights selection toward higher theme-weighted words', () => {
     // 'fridge' has themeWeights.kitchen = 3, 'ghost' has no themeWeights (weight 1).
     const pool = ['fridge', 'ghost'];
-    // rng() === 0 always picks the first item whose cumulative weight exceeds 0,
-    // i.e. the first candidate in iteration order — use a rng that always
-    // returns just under 1 to land on whichever item has more cumulative weight.
+    // rng() === 0 picks the first item whose cumulative weight exceeds 0,
+    // i.e. the first item with positive weight in iteration order. Since 'fridge'
+    // appears first and has weight 3, rng=0 selects 'fridge' over 'ghost'.
     const result = selectMagnetWords(pool, 1, 'kitchen', () => 0);
     expect(result).toEqual(['fridge']); // fridge (weight 3) sorts first, rng=0 picks it
   });
