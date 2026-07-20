@@ -49,6 +49,7 @@ export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPositi
         position={slamButtonPosition}
         theme={scene.wordTheme}
         getMagnetMesh={(word) => meshRefs.current.get(word)}
+        availableWords={layout.map((entry) => entry.word)}
       />
       <TesseractButton
         position={tesseractButtonPosition}

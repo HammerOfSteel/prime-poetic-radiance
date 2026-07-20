@@ -43,4 +43,15 @@ describe('createMagnetLayout', () => {
       expect(typeof entry.word).toBe('string');
     });
   });
+
+  it('always reserves template glue words (e.g. "the", "is", "a") on the board when present in the pool', () => {
+    // WORDS-like pool: a few required literals plus a much larger set of content words.
+    const contentWords = Array.from({ length: 50 }, (_, i) => `content${i}`);
+    const pool = ['the', 'is', 'a', 'I', 'my', 'and', 'we', 'why', 'you', 'as', 'their', ...contentWords];
+    const layout = createMagnetLayout(pool, 20, 'kitchen', -1.84, Math.random);
+    const words = layout.map((entry) => entry.word);
+    ['the', 'is', 'a', 'I', 'my', 'and', 'we', 'why', 'you', 'as', 'their'].forEach((literal) => {
+      expect(words).toContain(literal);
+    });
+  });
 });

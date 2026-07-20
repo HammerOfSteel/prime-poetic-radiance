@@ -29,3 +29,22 @@ export const TEMPLATES: (WordCategory | string)[][] = [
   ['almost', 'adj', 'always', 'adj'],
   ['their', 'noun', 'is', 'adj', 'my', 'noun', 'is', 'adverb'],
 ];
+
+const CATEGORY_TOKENS = new Set<string>(['noun', 'verb', 'adj', 'adverb', 'prep']);
+
+/**
+ * Literal (non-category) glue words referenced anywhere across `TEMPLATES`,
+ * deduped. These are typically small function words (articles, pronouns,
+ * copulas) with no category of their own — the pool's random-selection odds
+ * (see `magnetSelection.ts`) heavily favor the much larger set of content
+ * words, so without a guarantee these are placed as magnets, most templates
+ * silently drop their glue tokens and produce fragmented, sub-sentence
+ * output. `createMagnetLayout` uses this list to always reserve these words
+ * on the board (when present in the source pool) before filling the rest of
+ * the magnet count with weighted-random content words.
+ */
+export const REQUIRED_LITERALS: string[] = Array.from(
+  new Set(
+    TEMPLATES.flatMap((template) => template.filter((token) => !CATEGORY_TOKENS.has(token))),
+  ),
+);

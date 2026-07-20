@@ -17,4 +17,15 @@ describe('computeSlamLayout', () => {
     expect(layout[0].word).toBe('cat');
     expect(layout[0].x).toBeGreaterThanOrEqual(-1.2);
   });
+
+  it('wraps to a new line (lower y) when words would overflow maxX', () => {
+    const longWords = ['beautiful', 'wonderful', 'incredible', 'fascinating', 'mysterious'];
+    const layout = computeSlamLayout(longWords, { maxX: 1.6 });
+    const ys = layout.map((entry) => entry.y);
+    expect(new Set(ys).size).toBeGreaterThan(1);
+    // Every word's x must stay within the board's visible bounds.
+    layout.forEach((entry) => {
+      expect(entry.x).toBeLessThanOrEqual(1.6 + 2);
+    });
+  });
 });

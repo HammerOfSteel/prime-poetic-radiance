@@ -1,4 +1,5 @@
 import { pickWeightedRandom } from './generatePoem';
+import { REQUIRED_LITERALS } from './templates';
 import { getThemeWeight, type WordTheme } from './wordBank';
 
 export interface MagnetLayoutEntry {
@@ -34,6 +35,13 @@ export function selectMagnetWords(
  * `selectMagnetWords` and scatters them to randomized starting positions
  * above `surfaceZ`, mirroring the placement math previously inline in
  * Fridge.tsx.
+ *
+ * The template glue words in `REQUIRED_LITERALS` (e.g. "the", "is", "a") are
+ * always reserved first (if present in `pool`), since they have no category
+ * of their own and would otherwise be heavily diluted by the much larger
+ * content-word pool — leaving most poem templates unable to fill their
+ * connective tokens. The remaining `count` budget is filled via weighted
+ * random selection from the rest of the pool, as before.
  */
 export function createMagnetLayout(
   pool: string[],
@@ -42,7 +50,12 @@ export function createMagnetLayout(
   surfaceZ: number,
   rng: () => number = Math.random,
 ): MagnetLayoutEntry[] {
-  return selectMagnetWords(pool, count, theme, rng).map((word, index) => ({
+  const guaranteed = REQUIRED_LITERALS.filter((word) => pool.includes(word));
+  const remainingPool = pool.filter((word) => !guaranteed.includes(word));
+  const remainingCount = Math.max(0, count - guaranteed.length);
+  const words = [...guaranteed, ...selectMagnetWords(remainingPool, remainingCount, theme, rng)];
+
+  return words.map((word, index) => ({
     word,
     index,
     position: [
