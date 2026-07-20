@@ -58,4 +58,25 @@ describe('wordBank', () => {
     expect(getThemeWeight('fridge', 'kitchen')).toBe(3);
     expect(getThemeWeight('coffee', 'kitchen')).toBe(3);
   });
+
+  it('has dungeon-themed words with a dungeon weight greater than their default weight', () => {
+    const dungeonWords = ['torch', 'rune', 'skeleton', 'crypt', 'curse', 'treasure', 'abyss', 'chains', 'goblin', 'crumbling', 'stone', 'dagger'];
+    dungeonWords.forEach((word) => {
+      expect(WORDS).toContain(word);
+      expect(getThemeWeight(word, 'dungeon')).toBeGreaterThan(1);
+    });
+  });
+
+  it('reweights a handful of existing evocative words for the dungeon theme without changing their other weights', () => {
+    expect(getThemeWeight('shadow', 'dungeon')).toBeGreaterThan(1);
+    expect(getThemeWeight('echo', 'dungeon')).toBeGreaterThan(1);
+    expect(getThemeWeight('key', 'dungeon')).toBeGreaterThan(1);
+    expect(getThemeWeight('lock', 'dungeon')).toBeGreaterThan(1);
+    // ancient and sword are already tavern-weighted; dungeon adds its own
+    // weight alongside without disturbing the existing tavern weight
+    expect(getThemeWeight('ancient', 'tavern')).toBe(2);
+    expect(getThemeWeight('ancient', 'dungeon')).toBeGreaterThan(1);
+    expect(getThemeWeight('sword', 'tavern')).toBe(3);
+    expect(getThemeWeight('sword', 'dungeon')).toBeGreaterThan(1);
+  });
 });
