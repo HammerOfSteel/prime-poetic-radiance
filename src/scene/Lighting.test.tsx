@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import * as THREE from 'three';
-import { applyLightingPreset, computeTintedLightingPreset } from './Lighting';
+import { applyLightingPreset, computeTintedLightingPreset, computeActiveLightingPreset } from './Lighting';
 import { LIGHTING_PRESETS } from '../engine/lightingPresets';
 import { applyEnvironmentModifiers } from '../engine/environment';
+import { SCENES } from '../engine/scenes';
 
 describe('applyLightingPreset', () => {
   it('tweens ambient, directional, and fill light colors/intensities and fog color', () => {
@@ -35,5 +36,19 @@ describe('computeTintedLightingPreset', () => {
   it('returns the unmodified preset for clear weather', () => {
     const result = computeTintedLightingPreset('day', 'summer', 0);
     expect(result.directionalIntensity).toBe(LIGHTING_PRESETS.day.directionalIntensity);
+  });
+});
+
+describe('computeActiveLightingPreset', () => {
+  it('uses the scene fixed lighting preset instead of the tinted environment preset when the active scene opts out', () => {
+    const fixed = SCENES.tavern.fixedLightingPreset!;
+    const result = computeActiveLightingPreset('tavern', 'night', 'winter', 61);
+    expect(result).toEqual(fixed);
+  });
+
+  it('still uses the tinted environment preset for scenes with usesEnvironmentLighting true', () => {
+    const result = computeActiveLightingPreset('kitchen', 'night', 'winter', 61);
+    expect(result).not.toEqual(SCENES.tavern.fixedLightingPreset);
+    expect(result.ambientColor).not.toBe(LIGHTING_PRESETS.night.ambientColor); // tinted, not raw
   });
 });

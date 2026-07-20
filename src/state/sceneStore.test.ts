@@ -54,12 +54,55 @@ describe('useSceneStore', () => {
     expect(state.weatherCode).toBeNull();
   });
 
-  it('zooms to the fridge and resets back', () => {
-    useSceneStore.getState().zoomToFridge();
+  it('zooms in and resets back', () => {
+    useSceneStore.getState().zoomIn();
     expect(useSceneStore.getState().isZoomedIn).toBe(true);
 
     useSceneStore.getState().resetCamera();
     expect(useSceneStore.getState().isZoomedIn).toBe(false);
+  });
+
+  it('defaults to the kitchen scene with a pre-populated magnet layout', () => {
+    const state = useSceneStore.getState();
+    expect(state.activeSceneId).toBe('kitchen');
+    expect(state.magnetLayoutBySceneId.kitchen).toBeDefined();
+    expect(state.magnetLayoutBySceneId.kitchen).toHaveLength(35);
+  });
+
+  it('switching to a new scene zooms out and lazily creates its magnet layout', () => {
+    useSceneStore.getState().zoomIn();
+    useSceneStore.getState().setActiveScene('tavern');
+    const state = useSceneStore.getState();
+    expect(state.activeSceneId).toBe('tavern');
+    expect(state.isZoomedIn).toBe(false);
+    expect(state.magnetLayoutBySceneId.tavern).toBeDefined();
+    expect(state.magnetLayoutBySceneId.tavern!.length).toBeGreaterThan(0);
+  });
+
+  it('preserves an existing scene layout when switching back to it', () => {
+    useSceneStore.getState().setActiveScene('tavern');
+    const firstLayout = useSceneStore.getState().magnetLayoutBySceneId.tavern;
+    useSceneStore.getState().setActiveScene('kitchen');
+    useSceneStore.getState().setActiveScene('tavern');
+    expect(useSceneStore.getState().magnetLayoutBySceneId.tavern).toBe(firstLayout);
+  });
+
+  it('updates a single magnet position within a scene layout by index', () => {
+    const initial = useSceneStore.getState().magnetLayoutBySceneId.kitchen![0];
+    useSceneStore.getState().updateMagnetPosition('kitchen', 0, [1, 2, -1.84]);
+    const updated = useSceneStore.getState().magnetLayoutBySceneId.kitchen![0];
+    expect(updated.position).toEqual([1, 2, -1.84]);
+    expect(updated.word).toBe(initial.word);
+    // other entries are untouched
+    expect(useSceneStore.getState().magnetLayoutBySceneId.kitchen![1]).toEqual(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      useSceneStore.getInitialState().magnetLayoutBySceneId.kitchen![1],
+    );
+  });
+
+  it('does nothing when updating a position for a scene with no layout yet', () => {
+    useSceneStore.getState().updateMagnetPosition('tavern', 0, [0, 0, 0]);
+    expect(useSceneStore.getState().magnetLayoutBySceneId.tavern).toBeUndefined();
   });
 
   it('tracks the currently dragged magnet id', () => {

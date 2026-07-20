@@ -4,6 +4,8 @@ import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
 import { Kitchen } from './scene/Kitchen';
 import { Fridge } from './scene/Fridge';
+import { TavernRoom } from './scene/TavernRoom';
+import { TavernNoticeboard } from './scene/TavernNoticeboard';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
 import { TransitionOverlay } from './scene/TransitionOverlay';
@@ -11,16 +13,19 @@ import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
 import { useSceneStore } from './state/sceneStore';
 import { useEnvironmentSync } from './state/useEnvironmentSync';
+import { SCENES } from './engine/scenes';
 
-const CAMERA_ZOOMED_IN: [number, number, number] = [4, 5, 3.5];
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
+const DEFAULT_ZOOMED_OUT_TARGET: [number, number, number] = [0, 3, 0];
 
 function CameraRig({
   isZoomedIn,
+  zoomedInPosition,
   onTweenChange,
   onOverlayProgress,
 }: {
   isZoomedIn: boolean;
+  zoomedInPosition: [number, number, number];
   onTweenChange: (tweening: boolean) => void;
   onOverlayProgress: (progress: number) => void;
 }) {
@@ -29,7 +34,7 @@ function CameraRig({
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    const [x, y, z] = isZoomedIn ? CAMERA_ZOOMED_IN : CAMERA_ZOOMED_OUT;
+    const [x, y, z] = isZoomedIn ? zoomedInPosition : CAMERA_ZOOMED_OUT;
     gsap.killTweensOf(camera.position);
     onTweenChange(true);
     gsap.to(camera.position, {
@@ -53,19 +58,21 @@ function CameraRig({
     } else {
       isInitialMount.current = false;
     }
-  }, [camera, isZoomedIn, onTweenChange, onOverlayProgress]);
+  }, [camera, isZoomedIn, zoomedInPosition, onTweenChange, onOverlayProgress]);
 
   return null;
 }
 
 function App() {
   useEnvironmentSync();
+  const activeSceneId = useSceneStore((state) => state.activeSceneId);
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
-  const zoomToFridge = useSceneStore((state) => state.zoomToFridge);
+  const zoomIn = useSceneStore((state) => state.zoomIn);
   const [isTweening, setIsTweening] = useState(false);
   const [overlayProgress, setOverlayProgress] = useState(0);
 
-  const cameraTarget: [number, number, number] = isZoomedIn ? [4, 5, -1.85] : [0, 3, 0];
+  const activeScene = SCENES[activeSceneId];
+  const cameraTarget = isZoomedIn ? activeScene.cameraTarget : DEFAULT_ZOOMED_OUT_TARGET;
 
   return (
     <div data-testid="app-root" style={{ width: '100vw', height: '100vh' }}>
@@ -74,13 +81,27 @@ function App() {
           camera={{ position: CAMERA_ZOOMED_OUT, fov: 45, near: 0.1, far: 1000 }}
           shadows
           onPointerMissed={() => {
-            if (!isZoomedIn) zoomToFridge();
+            if (!isZoomedIn) zoomIn();
           }}
         >
-          <CameraRig isZoomedIn={isZoomedIn} onTweenChange={setIsTweening} onOverlayProgress={setOverlayProgress} />
+          <CameraRig
+            isZoomedIn={isZoomedIn}
+            zoomedInPosition={activeScene.cameraZoomedIn}
+            onTweenChange={setIsTweening}
+            onOverlayProgress={setOverlayProgress}
+          />
           <Lighting />
-          <Kitchen />
-          <Fridge />
+          {activeSceneId === 'kitchen' ? (
+            <>
+              <Kitchen />
+              <Fridge />
+            </>
+          ) : (
+            <>
+              <TavernRoom />
+              <TavernNoticeboard />
+            </>
+          )}
           <OrbitControls
             target={cameraTarget}
             enabled={isZoomedIn && !isTweening}

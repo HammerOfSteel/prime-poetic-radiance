@@ -39,4 +39,25 @@ describe('HUD', () => {
     expect(useSceneStore.getState().lightingPreset).toBe('night');
     expect(useSceneStore.getState().environmentMode).toBe('manual');
   });
+
+  it('renders one scene-switcher button per scene, with the active scene indicated', () => {
+    render(<HUD />);
+    const kitchenButton = screen.getByRole('button', { name: /kitchen fridge/i });
+    const tavernButton = screen.getByRole('button', { name: /tavern noticeboard/i });
+    expect(kitchenButton).toHaveAttribute('aria-pressed', 'true');
+    expect(tavernButton).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('switches the active scene when a scene button is clicked', async () => {
+    render(<HUD />);
+    await userEvent.click(screen.getByRole('button', { name: /tavern noticeboard/i }));
+    expect(useSceneStore.getState().activeSceneId).toBe('tavern');
+  });
+
+  it('hides the Auto/Manual toggle and lighting presets when the active scene opts out of environment lighting', async () => {
+    render(<HUD />);
+    await userEvent.click(screen.getByRole('button', { name: /tavern noticeboard/i }));
+    expect(screen.queryByRole('button', { name: /auto/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /night/i })).not.toBeInTheDocument();
+  });
 });

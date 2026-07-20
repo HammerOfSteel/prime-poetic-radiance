@@ -3,16 +3,21 @@ import { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { generatePoem } from '../engine/generatePoem';
 import { computeSlamLayout } from '../engine/slamLayout';
-import { WORDS } from '../engine/wordBank';
+import { WORDS, type WordTheme } from '../engine/wordBank';
 
 export interface SlamButtonProps {
   /** Maps a word to its live magnet mesh, so the animation can target the right object. */
   getMagnetMesh: (word: string) => THREE.Object3D | undefined;
   position: [number, number, number];
+  /** Scene theme used to weight which words the generated poem favors. Defaults to 'kitchen'. */
+  theme?: WordTheme;
 }
 
-export function triggerPoetrySlam(getMagnetMesh: SlamButtonProps['getMagnetMesh']): void {
-  const poemWords = generatePoem(WORDS);
+export function triggerPoetrySlam(
+  getMagnetMesh: SlamButtonProps['getMagnetMesh'],
+  theme: WordTheme = 'kitchen',
+): void {
+  const poemWords = generatePoem(WORDS, { theme });
   if (poemWords.length === 0) return;
   const layout = computeSlamLayout(poemWords);
   const targetY = 5 + (Math.random() - 0.5);
@@ -29,10 +34,10 @@ export function triggerPoetrySlam(getMagnetMesh: SlamButtonProps['getMagnetMesh'
   });
 }
 
-export function SlamButton({ getMagnetMesh, position }: SlamButtonProps) {
+export function SlamButton({ getMagnetMesh, position, theme }: SlamButtonProps) {
   function handleClick(event: ThreeEvent<MouseEvent>) {
     event.stopPropagation();
-    triggerPoetrySlam(getMagnetMesh);
+    triggerPoetrySlam(getMagnetMesh, theme);
   }
 
   return (

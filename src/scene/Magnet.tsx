@@ -6,16 +6,18 @@ import { computeDragPoint } from '../engine/dragPlane';
 import { useSceneStore } from '../state/sceneStore';
 import { createToonGradientMap } from './toonGradient';
 
-export const FRIDGE_DOOR_Z = -1.84;
-
 export interface MagnetProps {
   id: string;
   word: string;
   initialPosition: [number, number, number];
+  /** Local Z depth of this scene's magnet drag plane (see SceneDefinition.magnetSurfaceZ). */
+  surfaceZ: number;
   onMeshReady?: (mesh: THREE.Mesh | null) => void;
+  /** Called once with the final position when a drag ends, so callers can persist it. */
+  onPositionChange?: (position: [number, number, number]) => void;
 }
 
-export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) {
+export function Magnet({ id, word, initialPosition, surfaceZ, onMeshReady, onPositionChange }: MagnetProps) {
   const { camera } = useThree();
   const meshRef = useRef<THREE.Mesh>(null);
   const [position, setPosition] = useState(initialPosition);
@@ -37,12 +39,15 @@ export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) 
       (event.nativeEvent.offsetX / (event.target as HTMLElement).clientWidth) * 2 - 1,
       -(event.nativeEvent.offsetY / (event.target as HTMLElement).clientHeight) * 2 + 1,
     );
-    const point = computeDragPoint(ndc, camera, FRIDGE_DOOR_Z);
-    if (point) setPosition([point.x, point.y, FRIDGE_DOOR_Z]);
+    const point = computeDragPoint(ndc, camera, surfaceZ);
+    if (point) setPosition([point.x, point.y, surfaceZ]);
   }
 
   function handlePointerUp() {
-    if (draggedMagnetId === id) setDraggedMagnetId(null);
+    if (draggedMagnetId === id) {
+      setDraggedMagnetId(null);
+      onPositionChange?.(position);
+    }
   }
 
   return (
