@@ -3,13 +3,27 @@ import * as THREE from 'three';
 import gsapDefault from 'gsap';
 import { useThree } from '@react-three/fiber';
 import { useSceneStore } from '../state/sceneStore';
-import { LIGHTING_PRESETS, type LightingPreset } from '../engine/lightingPresets';
+import { LIGHTING_PRESETS, type LightingPreset, type LightingPresetName } from '../engine/lightingPresets';
+import { applyEnvironmentModifiers, type Season } from '../engine/environment';
 
 interface LightRefs {
   ambient: THREE.AmbientLight;
   directional: THREE.DirectionalLight;
   fill: THREE.PointLight;
   fog: THREE.FogExp2;
+}
+
+/**
+ * Looks up the named base preset and layers in season/weather tinting via
+ * `applyEnvironmentModifiers`. Pure and unit-testable, mirroring
+ * `applyLightingPreset` below.
+ */
+export function computeTintedLightingPreset(
+  name: LightingPresetName,
+  season: Season,
+  weatherCode: number | null,
+): LightingPreset {
+  return applyEnvironmentModifiers(LIGHTING_PRESETS[name], season, weatherCode);
 }
 
 /** Pure(ish) tween trigger, extracted so it's unit-testable with a mocked gsap. */
@@ -45,6 +59,8 @@ export function applyLightingPreset(
 export function Lighting() {
   const { scene } = useThree();
   const lightingPreset = useSceneStore((state) => state.lightingPreset);
+  const season = useSceneStore((state) => state.season);
+  const weatherCode = useSceneStore((state) => state.weatherCode);
 
   const ambientRef = useRef<THREE.AmbientLight>(null);
   const directionalRef = useRef<THREE.DirectionalLight>(null);
@@ -63,9 +79,9 @@ export function Lighting() {
         fill: fillRef.current,
         fog: scene.fog as THREE.FogExp2,
       },
-      LIGHTING_PRESETS[lightingPreset],
+      computeTintedLightingPreset(lightingPreset, season, weatherCode),
     );
-  }, [lightingPreset, scene]);
+  }, [lightingPreset, season, weatherCode, scene]);
 
   return (
     <>

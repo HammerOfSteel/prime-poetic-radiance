@@ -10,6 +10,7 @@ import { TransitionOverlay } from './scene/TransitionOverlay';
 import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
 import { useSceneStore } from './state/sceneStore';
+import { useEnvironmentSync } from './state/useEnvironmentSync';
 
 const CAMERA_ZOOMED_IN: [number, number, number] = [4, 5, 3.5];
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
@@ -58,6 +59,7 @@ function CameraRig({
 }
 
 function App() {
+  useEnvironmentSync();
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
   const zoomToFridge = useSceneStore((state) => state.zoomToFridge);
   const [isTweening, setIsTweening] = useState(false);
