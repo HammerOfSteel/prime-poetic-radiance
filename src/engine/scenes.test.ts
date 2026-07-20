@@ -14,7 +14,7 @@ describe('scenes', () => {
   });
 
   it('gives the kitchen scene the existing fridge-door surface and camera framing', () => {
-    expect(SCENES.kitchen.magnetSurfaceZ).toBe(-1.84);
+    expect(SCENES.kitchen.magnetSurfaceZ).toBe(1.75);
     expect(SCENES.kitchen.magnetCount).toBe(35);
     expect(SCENES.kitchen.wordTheme).toBe('kitchen');
     expect(SCENES.kitchen.usesEnvironmentLighting).toBe(true);

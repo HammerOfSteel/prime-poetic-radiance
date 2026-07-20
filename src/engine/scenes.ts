@@ -9,7 +9,11 @@ export interface SceneDefinition {
   label: string;
   /** Scene theme used to weight word selection (see wordBank.ts). */
   wordTheme: WordTheme;
-  /** Local Z depth of the magnet drag plane, relative to the scene's group. */
+  /**
+   * Local Z depth of the magnet drag plane, relative to the scene's group.
+   * Must sit slightly in front of (larger/closer-to-camera than) the
+   * board/door mesh's own front face, or magnets render hidden behind it.
+   */
   magnetSurfaceZ: number;
   /** Number of magnets scattered on this scene's board. */
   magnetCount: number;
@@ -31,7 +35,9 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     id: 'kitchen',
     label: 'Kitchen Fridge',
     wordTheme: 'kitchen',
-    magnetSurfaceZ: -1.84,
+    // Door front face is at local z ~1.65 (see Fridge.tsx); magnets need to
+    // clear that so they render in front of the door, not behind it.
+    magnetSurfaceZ: 1.75,
     magnetCount: 35,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
@@ -42,7 +48,9 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     id: 'tavern',
     label: 'Tavern Noticeboard',
     wordTheme: 'tavern',
-    magnetSurfaceZ: -1.84,
+    // Board mesh is positioned at `surfaceZ - 0.15` (see
+    // TavernNoticeboard.tsx) so this plane sits just in front of its face.
+    magnetSurfaceZ: -1.7,
     magnetCount: 30,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
@@ -61,7 +69,9 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     id: 'dungeon',
     label: 'Dungeon Tablet',
     wordTheme: 'dungeon',
-    magnetSurfaceZ: -1.84,
+    // Board mesh is positioned at `surfaceZ - 0.15` (see DungeonTablet.tsx)
+    // so this plane sits just in front of its face.
+    magnetSurfaceZ: -1.7,
     magnetCount: 30,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],

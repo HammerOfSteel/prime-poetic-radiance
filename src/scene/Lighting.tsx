@@ -106,7 +106,7 @@ export function Lighting() {
 
   return (
     <>
-      <ambientLight ref={ambientRef} intensity={0.2} />
+      <ambientLight ref={ambientRef} intensity={0.45} />
       <directionalLight
         ref={directionalRef}
         position={[5, 10, 5]}

@@ -13,7 +13,9 @@ export function DungeonTablet() {
 
   return (
     <group position={[4, 0, -3.5]}>
-      <RoundedBox args={[3.6, 4, 0.2]} radius={0.04} smoothness={4} position={[0, 4, surfaceZ + 0.05]} receiveShadow>
+      {/* Board sits behind the magnet plane (surfaceZ) so magnets render in
+          front of its face rather than embedded inside it. */}
+      <RoundedBox args={[3.6, 4, 0.2]} radius={0.04} smoothness={4} position={[0, 4, surfaceZ - 0.15]} receiveShadow>
         <meshToonMaterial color="#6a6a72" gradientMap={gradientMap} />
       </RoundedBox>
 

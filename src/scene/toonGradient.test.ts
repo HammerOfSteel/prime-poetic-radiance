@@ -8,7 +8,7 @@ describe('createToonGradientMap', () => {
     expect(texture).toBeInstanceOf(THREE.DataTexture);
     expect(texture.image.width).toBe(4);
     expect(texture.image.height).toBe(1);
-    expect(Array.from(texture.image.data as Uint8Array)).toEqual([0, 85, 170, 255]);
+    expect(Array.from(texture.image.data as Uint8Array)).toEqual([90, 145, 200, 255]);
   });
 
   it('uses NearestFilter for both mag and min filters to keep bands crisp', () => {
