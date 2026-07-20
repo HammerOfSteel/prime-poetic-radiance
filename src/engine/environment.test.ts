@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { seasonFromDate, timeOfDayFromClock, timeOfDayFromSunTimes } from './environment';
+import { seasonFromDate, timeOfDayFromClock, timeOfDayFromSunTimes, applyEnvironmentModifiers } from './environment';
+import { LIGHTING_PRESETS } from './lightingPresets';
 
 function atHour(hour: number): Date {
   const d = new Date(2026, 5, 15); // June 15, 2026 (a Monday), local time
@@ -78,5 +79,61 @@ describe('seasonFromDate', () => {
 
   it('flips to southern-hemisphere winter for July at negative latitude', () => {
     expect(seasonFromDate(new Date(2026, 6, 15), -33.9)).toBe('winter');
+  });
+});
+
+describe('applyEnvironmentModifiers', () => {
+  it('leaves intensities and colors unchanged for clear weather (code 0)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const result = applyEnvironmentModifiers(base, 'summer', 0);
+    expect(result.directionalIntensity).toBe(base.directionalIntensity);
+    expect(result.fillIntensity).toBe(base.fillIntensity);
+    expect(result.ambientColor).toBe(base.ambientColor);
+    expect(result.directionalColor).toBe(base.directionalColor);
+    expect(result.fillColor).toBe(base.fillColor);
+  });
+
+  it('leaves intensities and colors unchanged for null weather (fallback/offline)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const result = applyEnvironmentModifiers(base, 'summer', null);
+    expect(result.directionalIntensity).toBe(base.directionalIntensity);
+    expect(result.ambientColor).toBe(base.ambientColor);
+  });
+
+  it('dims and desaturates for overcast codes (1-3)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const result = applyEnvironmentModifiers(base, 'summer', 2);
+    expect(result.directionalIntensity).toBeLessThan(base.directionalIntensity);
+    expect(result.fillIntensity).toBeLessThan(base.fillIntensity);
+    expect(result.ambientColor).not.toBe(base.ambientColor);
+  });
+
+  it('dims further and shifts fog for precipitation codes (e.g. 61 rain)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const overcast = applyEnvironmentModifiers(base, 'summer', 2);
+    const rain = applyEnvironmentModifiers(base, 'summer', 61);
+    expect(rain.directionalIntensity).toBeLessThan(overcast.directionalIntensity);
+    expect(rain.fogColor).not.toBe(base.fogColor);
+  });
+
+  it('dims and shifts fog for fog codes (45, 48)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const result = applyEnvironmentModifiers(base, 'summer', 45);
+    expect(result.directionalIntensity).toBeLessThan(base.directionalIntensity);
+    expect(result.fogColor).not.toBe(base.fogColor);
+  });
+
+  it('always tints fog color slightly by season, even in clear weather', () => {
+    const base = LIGHTING_PRESETS.day;
+    const winter = applyEnvironmentModifiers(base, 'winter', 0);
+    const summer = applyEnvironmentModifiers(base, 'summer', 0);
+    expect(winter.fogColor).not.toBe(base.fogColor);
+    expect(winter.fogColor).not.toBe(summer.fogColor);
+  });
+
+  it('preserves directionalPosition unchanged', () => {
+    const base = LIGHTING_PRESETS.evening;
+    const result = applyEnvironmentModifiers(base, 'autumn', 95);
+    expect(result.directionalPosition).toEqual(base.directionalPosition);
   });
 });
