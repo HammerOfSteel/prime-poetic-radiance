@@ -1,7 +1,7 @@
 # Phase 2a: Shading & Palette — Design
 
 **Date:** 2026-07-20
-**Status:** Approved
+**Status:** Implemented
 
 ## Context
 
