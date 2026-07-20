@@ -1,0 +1,32 @@
+body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Inter', sans-serif; }
+.interactive-ui { pointer-events: auto; }
+.glass-panel {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1rem;
+}
+button { transition: all 0.2s ease; }
+button:hover { transform: translateY(-2px); }
+button:active { transform: translateY(1px); }
+
+.hud {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 1rem;
+    color: white;
+}
+
+.step-back-button {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}

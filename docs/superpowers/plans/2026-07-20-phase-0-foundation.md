@@ -1436,15 +1436,24 @@ export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) 
 }
 ```
 
-- [ ] **Step 9: Run the full test suite to confirm nothing broke**
+- [ ] **Step 9: Update `Fridge.test.tsx`'s expected mesh count for the two new buttons**
+
+Edit `src/scene/Fridge.test.tsx`, since `Fridge` now also renders the Slam and
+Tesseract button meshes (body + door + 35 magnets + 2 buttons = 39):
+
+```tsx
+    expect(meshes.length).toBe(39); // body + door + 35 magnets + slam button + tesseract button
+```
+
+- [ ] **Step 10: Run the full test suite to confirm nothing broke**
 
 Run: `npx vitest run`
 Expected: PASS (all tests across every file so far).
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 11: Commit**
 
 ```bash
-git add src/engine/slamLayout.ts src/engine/slamLayout.test.ts src/scene/SlamButton.tsx src/scene/TesseractButton.tsx src/scene/Fridge.tsx src/scene/Magnet.tsx
+git add src/engine/slamLayout.ts src/engine/slamLayout.test.ts src/scene/SlamButton.tsx src/scene/TesseractButton.tsx src/scene/Fridge.tsx src/scene/Magnet.tsx src/scene/Fridge.test.tsx
 git commit -m "feat(scene): port Poetry Slam and Tesseract Shuffle interactions"
 ```
 
