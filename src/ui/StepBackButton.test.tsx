@@ -15,7 +15,7 @@ describe('StepBackButton', () => {
   });
 
   it('renders and resets the camera when clicked, once zoomed in', async () => {
-    useSceneStore.getState().zoomToFridge();
+    useSceneStore.getState().zoomIn();
     render(<StepBackButton />);
     const button = screen.getByRole('button', { name: /step back/i });
     await userEvent.click(button);

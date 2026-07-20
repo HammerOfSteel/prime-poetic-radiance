@@ -61,7 +61,7 @@ function CameraRig({
 function App() {
   useEnvironmentSync();
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
-  const zoomToFridge = useSceneStore((state) => state.zoomToFridge);
+  const zoomIn = useSceneStore((state) => state.zoomIn);
   const [isTweening, setIsTweening] = useState(false);
   const [overlayProgress, setOverlayProgress] = useState(0);
 
@@ -74,7 +74,7 @@ function App() {
           camera={{ position: CAMERA_ZOOMED_OUT, fov: 45, near: 0.1, far: 1000 }}
           shadows
           onPointerMissed={() => {
-            if (!isZoomedIn) zoomToFridge();
+            if (!isZoomedIn) zoomIn();
           }}
         >
           <CameraRig isZoomedIn={isZoomedIn} onTweenChange={setIsTweening} onOverlayProgress={setOverlayProgress} />
