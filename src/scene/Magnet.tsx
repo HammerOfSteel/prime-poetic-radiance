@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { ThreeEvent, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { createWordTexture, measureWordTextureWidth } from './wordTexture';
@@ -21,7 +21,7 @@ export function Magnet({ id, word, initialPosition }: MagnetProps) {
   const draggedMagnetId = useSceneStore((state) => state.draggedMagnetId);
 
   const width = measureWordTextureWidth(word) * 0.5;
-  const texture = createWordTexture(word);
+  const texture = useMemo(() => createWordTexture(word), [word]);
 
   function handlePointerDown(event: ThreeEvent<PointerEvent>) {
     event.stopPropagation();

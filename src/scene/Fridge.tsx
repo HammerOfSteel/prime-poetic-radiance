@@ -7,7 +7,17 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 export function Fridge() {
-  const magnetWords = useMemo(() => shuffle(WORDS).slice(0, 35), []);
+  const magnetData = useMemo(() => {
+    return shuffle(WORDS).slice(0, 35).map((word, index) => ({
+      word,
+      index,
+      initialPosition: [
+        (Math.random() - 0.5) * 3,
+        4 + (Math.random() - 0.2) * 3,
+        FRIDGE_DOOR_Z,
+      ] as [number, number, number],
+    }));
+  }, []);
 
   return (
     <group position={[4, 0, -3.5]}>
@@ -21,18 +31,14 @@ export function Fridge() {
         <meshStandardMaterial color="#f5f6fa" roughness={0.4} metalness={0.1} />
       </mesh>
 
-      {magnetWords.map((word, index) => {
-        const x = (Math.random() - 0.5) * 3;
-        const y = 4 + (Math.random() - 0.2) * 3;
-        return (
-          <Magnet
-            key={`${word}-${index}`}
-            id={`magnet-${index}`}
-            word={word}
-            initialPosition={[x, y, FRIDGE_DOOR_Z]}
-          />
-        );
-      })}
+      {magnetData.map(({ word, index, initialPosition }) => (
+        <Magnet
+          key={`${word}-${index}`}
+          id={`magnet-${index}`}
+          word={word}
+          initialPosition={initialPosition}
+        />
+      ))}
     </group>
   );
 }
