@@ -1,7 +1,7 @@
 # Phase 0: Foundation — Design
 
 **Date:** 2026-07-20
-**Status:** Approved
+**Status:** Implemented (see docs/superpowers/plans/2026-07-20-phase-0-foundation.md)
 **Depends on:** `2026-07-20-roadmap-overview.md`
 
 ## Goal
