@@ -3,7 +3,7 @@ import { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 
 export interface TesseractButtonProps {
-  magnetMeshes: THREE.Object3D[];
+  getMagnetMeshes: () => THREE.Object3D[];
   position: [number, number, number];
 }
 
@@ -27,10 +27,10 @@ export function triggerTesseractShuffle(magnetMeshes: THREE.Object3D[]): void {
   });
 }
 
-export function TesseractButton({ magnetMeshes, position }: TesseractButtonProps) {
+export function TesseractButton({ getMagnetMeshes, position }: TesseractButtonProps) {
   function handleClick(event: ThreeEvent<MouseEvent>) {
     event.stopPropagation();
-    triggerTesseractShuffle(magnetMeshes);
+    triggerTesseractShuffle(getMagnetMeshes());
   }
 
   return (

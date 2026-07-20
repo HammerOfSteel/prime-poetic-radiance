@@ -57,7 +57,7 @@ export function Fridge() {
       />
       <TesseractButton
         position={[1.2, 2.5, FRIDGE_DOOR_Z]}
-        magnetMeshes={Array.from(meshRefs.current.values())}
+        getMagnetMeshes={() => Array.from(meshRefs.current.values())}
       />
     </group>
   );

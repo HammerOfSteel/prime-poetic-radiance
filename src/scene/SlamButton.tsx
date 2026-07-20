@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { ThreeEvent } from '@react-three/fiber';
+import * as THREE from 'three';
 import { generatePoem } from '../engine/generatePoem';
 import { computeSlamLayout } from '../engine/slamLayout';
 import { WORDS } from '../engine/wordBank';
