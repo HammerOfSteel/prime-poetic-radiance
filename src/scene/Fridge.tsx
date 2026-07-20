@@ -4,6 +4,7 @@ import { WORDS } from '../engine/wordBank';
 import { Magnet, FRIDGE_DOOR_Z } from './Magnet';
 import { SlamButton } from './SlamButton';
 import { TesseractButton } from './TesseractButton';
+import { createToonGradientMap } from './toonGradient';
 
 function shuffle<T>(items: T[]): T[] {
   return [...items].sort(() => 0.5 - Math.random());
@@ -22,6 +23,8 @@ export function Fridge() {
     }));
   }, []);
 
+  const gradientMap = useMemo(() => createToonGradientMap(), []);
+
   const meshRefs = useRef(new Map<string, THREE.Object3D>());
 
   function registerMesh(word: string, mesh: THREE.Mesh | null) {
@@ -33,12 +36,12 @@ export function Fridge() {
     <group position={[4, 0, -3.5]}>
       <mesh position={[0, 4, 0]} castShadow receiveShadow>
         <boxGeometry args={[3.5, 8, 3]} />
-        <meshStandardMaterial color="#f5f6fa" roughness={0.4} metalness={0.1} />
+        <meshToonMaterial color="#f6d98a" gradientMap={gradientMap} />
       </mesh>
 
       <mesh position={[0, 4, 1.55]} receiveShadow>
         <boxGeometry args={[3.6, 7.8, 0.2]} />
-        <meshStandardMaterial color="#f5f6fa" roughness={0.4} metalness={0.1} />
+        <meshToonMaterial color="#f6d98a" gradientMap={gradientMap} />
       </mesh>
 
       {magnetData.map(({ word, index, initialPosition }) => (

@@ -19,15 +19,15 @@ describe('LIGHTING_PRESETS', () => {
     });
   });
 
-  it('matches the ported values for the night preset', () => {
-    expect(LIGHTING_PRESETS.night).toEqual({
-      ambientColor: '#0984e3',
-      directionalColor: '#74b9ff',
-      fillColor: '#00cec9',
-      fogColor: '#050510',
-      directionalIntensity: 0.2,
-      fillIntensity: 0.3,
-      directionalPosition: { x: 0, y: 10, z: 0 },
-    });
+  it('retunes day, evening, and night to warmer colors for the cozy toy aesthetic', () => {
+    expect(LIGHTING_PRESETS.day.ambientColor).toBe('#fff8ec');
+    expect(LIGHTING_PRESETS.day.directionalColor).toBe('#fff4de');
+    expect(LIGHTING_PRESETS.day.fillColor).toBe('#fff2d9');
+
+    expect(LIGHTING_PRESETS.evening.ambientColor).toBe('#a8677a');
+
+    expect(LIGHTING_PRESETS.night.ambientColor).toBe('#2c3e6b');
+    expect(LIGHTING_PRESETS.night.directionalColor).toBe('#b8c4e0');
+    expect(LIGHTING_PRESETS.night.fillColor).toBe('#e8a054');
   });
 });

@@ -13,14 +13,14 @@ export function createWordCanvas(word: string): HTMLCanvasElement {
   const ctx = canvas.getContext('2d');
   if (!ctx) return canvas;
 
-  ctx.fillStyle = '#f8f9fa';
+  ctx.fillStyle = '#fdf6ec';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.strokeStyle = '#d1d8e0';
+  ctx.strokeStyle = '#e0c9a0';
   ctx.lineWidth = 4;
   ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
 
-  ctx.fillStyle = '#2d3436';
+  ctx.fillStyle = '#3d2b1f';
   ctx.font = 'bold 36px "Inter", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
