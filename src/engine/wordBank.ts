@@ -1,8 +1,8 @@
 export type WordCategory = 'noun' | 'verb' | 'adj' | 'adverb' | 'prep';
 
-/** Scene themes words can be weighted for. Only 'kitchen' exists until Phase 4
- * adds more scenes; all Phase 1 weights are tuned for this single theme. */
-export type WordTheme = 'kitchen';
+/** Scene themes words can be weighted for. Phase 4a adds 'tavern' alongside
+ * the original Phase 1 'kitchen' theme. */
+export type WordTheme = 'kitchen' | 'tavern';
 
 export interface WordEntry {
   word: string;
@@ -44,7 +44,7 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'bear', category: 'noun' },
   { word: 'snow', category: 'noun' },
   { word: 'ice', category: 'noun' },
-  { word: 'fire', category: 'noun' },
+  { word: 'fire', category: 'noun', themeWeights: { tavern: 2 } },
   { word: 'ash', category: 'noun' },
   { word: 'smoke', category: 'noun' },
   { word: 'silence', category: 'noun' },
@@ -58,19 +58,19 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'key', category: 'noun' },
   { word: 'lock', category: 'noun' },
   { word: 'letter', category: 'noun' },
-  { word: 'secret', category: 'noun' },
+  { word: 'secret', category: 'noun', themeWeights: { tavern: 2 } },
   { word: 'memory', category: 'noun' },
   { word: 'heart', category: 'noun' },
   { word: 'soul', category: 'noun' },
   { word: 'spirit', category: 'noun' },
   { word: 'angel', category: 'noun' },
   { word: 'devil', category: 'noun' },
-  { word: 'stranger', category: 'noun' },
+  { word: 'stranger', category: 'noun', themeWeights: { tavern: 2 } },
   { word: 'friend', category: 'noun' },
   { word: 'family', category: 'noun' },
   { word: 'home', category: 'noun' },
   { word: 'road', category: 'noun' },
-  { word: 'journey', category: 'noun' },
+  { word: 'journey', category: 'noun', themeWeights: { tavern: 2 } },
   { word: 'map', category: 'noun' },
   { word: 'compass', category: 'noun' },
   { word: 'clock', category: 'noun' },
@@ -91,6 +91,18 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'milk', category: 'noun', themeWeights: { kitchen: 3 } },
   { word: 'butter', category: 'noun', themeWeights: { kitchen: 3 } },
   { word: 'apple', category: 'noun', themeWeights: { kitchen: 3 } },
+  { word: 'ale', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'quest', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'sword', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'dragon', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'bard', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'tavern', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'mead', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'gold', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'oath', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'blade', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'tankard', category: 'noun', themeWeights: { tavern: 3 } },
+  { word: 'legend', category: 'noun', themeWeights: { tavern: 3 } },
 
   // --- verbs ---
   { word: 'love', category: 'verb' },
@@ -170,7 +182,7 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'empty', category: 'adj' },
   { word: 'full', category: 'adj' },
   { word: 'heavy', category: 'adj' },
-  { word: 'ancient', category: 'adj' },
+  { word: 'ancient', category: 'adj', themeWeights: { tavern: 2 } },
   { word: 'young', category: 'adj' },
   { word: 'old', category: 'adj' },
   { word: 'new', category: 'adj' },

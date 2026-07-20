@@ -39,4 +39,23 @@ describe('wordBank', () => {
   it('returns 1 for a word that is not a known entry', () => {
     expect(getThemeWeight('not-a-real-word', 'kitchen')).toBe(1);
   });
+
+  it('has tavern-themed words with a tavern weight greater than their kitchen weight', () => {
+    const tavernWords = ['ale', 'quest', 'sword', 'dragon', 'bard', 'tavern', 'mead', 'gold', 'oath', 'blade', 'tankard', 'legend'];
+    tavernWords.forEach((word) => {
+      expect(WORDS).toContain(word);
+      expect(getThemeWeight(word, 'tavern')).toBeGreaterThan(1);
+    });
+  });
+
+  it('reweights a handful of existing evocative words for the tavern theme without changing their kitchen weight', () => {
+    expect(getThemeWeight('fire', 'tavern')).toBeGreaterThan(1);
+    expect(getThemeWeight('ancient', 'tavern')).toBeGreaterThan(1);
+    expect(getThemeWeight('stranger', 'tavern')).toBeGreaterThan(1);
+    expect(getThemeWeight('journey', 'tavern')).toBeGreaterThan(1);
+    expect(getThemeWeight('secret', 'tavern')).toBeGreaterThan(1);
+    // kitchen-themed words already weighted for kitchen keep that weight untouched
+    expect(getThemeWeight('fridge', 'kitchen')).toBe(3);
+    expect(getThemeWeight('coffee', 'kitchen')).toBe(3);
+  });
 });
