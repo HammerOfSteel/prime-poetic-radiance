@@ -47,7 +47,13 @@ export function TesseractButton({ getMagnetMeshes, position, onShuffleComplete }
   }
 
   return (
-    <mesh position={position} castShadow onClick={handleClick} userData={{ isTesseractButton: true }}>
+    <mesh
+      position={position}
+      rotation={[Math.PI / 2, 0, 0]}
+      castShadow
+      onClick={handleClick}
+      userData={{ isTesseractButton: true }}
+    >
       <cylinderGeometry args={[0.25, 0.25, 0.08, 32]} />
       <meshStandardMaterial color="#0984e3" roughness={0.4} />
     </mesh>

@@ -41,7 +41,7 @@ export function SlamButton({ getMagnetMesh, position, theme }: SlamButtonProps) 
   }
 
   return (
-    <mesh position={position} castShadow onClick={handleClick} userData={{ isSlamButton: true }}>
+    <mesh position={position} rotation={[Math.PI / 2, 0, 0]} castShadow onClick={handleClick} userData={{ isSlamButton: true }}>
       <cylinderGeometry args={[0.25, 0.25, 0.08, 32]} />
       <meshStandardMaterial color="#ff4757" roughness={0.4} />
     </mesh>
