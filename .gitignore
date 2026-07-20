@@ -4,6 +4,7 @@ target/
 .DS_Store
 src-tauri/target/
 .worktrees/
+.superpowers/
 
 # Vite
 dist-ssr/
