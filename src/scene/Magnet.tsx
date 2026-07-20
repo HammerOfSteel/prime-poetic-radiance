@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { createWordTexture, measureWordTextureWidth } from './wordTexture';
 import { computeDragPoint } from '../engine/dragPlane';
 import { useSceneStore } from '../state/sceneStore';
+import { createToonGradientMap } from './toonGradient';
 
 export const FRIDGE_DOOR_Z = -1.84;
 
@@ -23,6 +24,7 @@ export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) 
 
   const width = measureWordTextureWidth(word) * 0.5;
   const texture = useMemo(() => createWordTexture(word), [word]);
+  const gradientMap = useMemo(() => createToonGradientMap(), []);
 
   function handlePointerDown(event: ThreeEvent<PointerEvent>) {
     event.stopPropagation();
@@ -58,7 +60,7 @@ export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) 
       onPointerUp={handlePointerUp}
     >
       <boxGeometry args={[width, 0.22, 0.05]} />
-      <meshStandardMaterial map={texture} roughness={0.6} metalness={0.1} />
+      <meshToonMaterial map={texture} gradientMap={gradientMap} />
     </mesh>
   );
 }
