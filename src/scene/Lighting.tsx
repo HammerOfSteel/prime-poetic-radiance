@@ -5,6 +5,7 @@ import { useThree } from '@react-three/fiber';
 import { useSceneStore } from '../state/sceneStore';
 import { LIGHTING_PRESETS, type LightingPreset, type LightingPresetName } from '../engine/lightingPresets';
 import { applyEnvironmentModifiers, type Season } from '../engine/environment';
+import { SCENES, type SceneId } from '../engine/scenes';
 
 interface LightRefs {
   ambient: THREE.AmbientLight;
@@ -24,6 +25,25 @@ export function computeTintedLightingPreset(
   weatherCode: number | null,
 ): LightingPreset {
   return applyEnvironmentModifiers(LIGHTING_PRESETS[name], season, weatherCode);
+}
+
+/**
+ * Resolves the lighting preset that should actually be applied for the
+ * active scene: the scene's fixed preset if it opts out of the environment
+ * system, otherwise the tinted preset from the Auto/Manual lighting state.
+ * Pure and unit-testable, mirroring computeTintedLightingPreset above.
+ */
+export function computeActiveLightingPreset(
+  activeSceneId: SceneId,
+  lightingPreset: LightingPresetName,
+  season: Season,
+  weatherCode: number | null,
+): LightingPreset {
+  const scene = SCENES[activeSceneId];
+  if (!scene.usesEnvironmentLighting && scene.fixedLightingPreset) {
+    return scene.fixedLightingPreset;
+  }
+  return computeTintedLightingPreset(lightingPreset, season, weatherCode);
 }
 
 /** Pure(ish) tween trigger, extracted so it's unit-testable with a mocked gsap. */
@@ -58,6 +78,7 @@ export function applyLightingPreset(
 
 export function Lighting() {
   const { scene } = useThree();
+  const activeSceneId = useSceneStore((state) => state.activeSceneId);
   const lightingPreset = useSceneStore((state) => state.lightingPreset);
   const season = useSceneStore((state) => state.season);
   const weatherCode = useSceneStore((state) => state.weatherCode);
@@ -79,9 +100,9 @@ export function Lighting() {
         fill: fillRef.current,
         fog: scene.fog as THREE.FogExp2,
       },
-      computeTintedLightingPreset(lightingPreset, season, weatherCode),
+      computeActiveLightingPreset(activeSceneId, lightingPreset, season, weatherCode),
     );
-  }, [lightingPreset, season, weatherCode, scene]);
+  }, [activeSceneId, lightingPreset, season, weatherCode, scene]);
 
   return (
     <>
