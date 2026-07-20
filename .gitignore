@@ -4,3 +4,12 @@ target/
 .DS_Store
 src-tauri/target/
 .worktrees/
+
+# Vite
+dist-ssr/
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
