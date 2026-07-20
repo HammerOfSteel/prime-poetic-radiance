@@ -12,7 +12,7 @@ export function HUD() {
   const setLightingPreset = useSceneStore((state) => state.setLightingPreset);
 
   return (
-    <div className="glass-panel interactive-ui">
+    <div className="glass-panel interactive-ui hud">
       <h1>Magic Fridge</h1>
       <p>Click the fridge to zoom in. Drag words to write poetry.</p>
       <div>

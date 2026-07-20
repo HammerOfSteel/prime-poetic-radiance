@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
@@ -13,14 +13,22 @@ import { useSceneStore } from './state/sceneStore';
 const CAMERA_ZOOMED_IN: [number, number, number] = [4, 5, 3.5];
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
 
-function CameraRig({ isZoomedIn }: { isZoomedIn: boolean }) {
+function CameraRig({ isZoomedIn, onTweenChange }: { isZoomedIn: boolean; onTweenChange: (tweening: boolean) => void }) {
   const { camera } = useThree();
 
   useEffect(() => {
     const [x, y, z] = isZoomedIn ? CAMERA_ZOOMED_IN : CAMERA_ZOOMED_OUT;
     gsap.killTweensOf(camera.position);
-    gsap.to(camera.position, { x, y, z, duration: 0.8, ease: 'power2.inOut' });
-  }, [camera, isZoomedIn]);
+    onTweenChange(true);
+    gsap.to(camera.position, {
+      x,
+      y,
+      z,
+      duration: 0.8,
+      ease: 'power2.inOut',
+      onComplete: () => onTweenChange(false),
+    });
+  }, [camera, isZoomedIn, onTweenChange]);
 
   return null;
 }
@@ -28,6 +36,7 @@ function CameraRig({ isZoomedIn }: { isZoomedIn: boolean }) {
 function App() {
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
   const zoomToFridge = useSceneStore((state) => state.zoomToFridge);
+  const [isTweening, setIsTweening] = useState(false);
 
   const cameraTarget: [number, number, number] = isZoomedIn ? [4, 5, -1.85] : [0, 3, 0];
 
@@ -41,13 +50,13 @@ function App() {
             if (!isZoomedIn) zoomToFridge();
           }}
         >
-          <CameraRig isZoomedIn={isZoomedIn} />
+          <CameraRig isZoomedIn={isZoomedIn} onTweenChange={setIsTweening} />
           <Lighting />
           <Kitchen />
           <Fridge />
           <OrbitControls
             target={cameraTarget}
-            enabled={isZoomedIn}
+            enabled={isZoomedIn && !isTweening}
             minDistance={5}
             maxDistance={25}
             maxPolarAngle={Math.PI / 2 - 0.05}

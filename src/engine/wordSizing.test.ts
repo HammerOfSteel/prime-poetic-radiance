@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { measureWordTextureWidth } from './wordTexture';
+import { measureWordTextureWidth } from './wordSizing';
 
 describe('measureWordTextureWidth', () => {
   it('grows with word length', () => {

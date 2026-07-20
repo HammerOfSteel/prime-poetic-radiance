@@ -7,7 +7,7 @@ export function StepBackButton() {
   if (!isZoomedIn) return null;
 
   return (
-    <button type="button" className="glass-panel interactive-ui" onClick={resetCamera}>
+    <button type="button" className="glass-panel interactive-ui step-back-button" onClick={resetCamera}>
       Step Back
     </button>
   );

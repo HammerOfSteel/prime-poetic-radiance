@@ -1,4 +1,4 @@
-import { measureWordTextureWidth } from '../scene/wordTexture';
+import { measureWordTextureWidth } from '../engine/wordSizing';
 
 const START_X = 2.8;
 const PADDING = 0.1;
