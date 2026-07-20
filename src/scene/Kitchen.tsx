@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
 
 export function Kitchen() {
@@ -26,15 +27,13 @@ export function Kitchen() {
         <meshBasicMaterial color="#fff3d6" />
       </mesh>
 
-      <mesh position={[-4, 1.5, -4]} castShadow receiveShadow>
-        <boxGeometry args={[12, 3, 3]} />
+      <RoundedBox args={[12, 3, 3]} radius={0.1} smoothness={4} position={[-4, 1.5, -4]} castShadow receiveShadow>
         <meshToonMaterial color="#c96a3e" gradientMap={gradientMap} />
-      </mesh>
+      </RoundedBox>
 
-      <mesh position={[-4, 3.1, -4]} castShadow receiveShadow>
-        <boxGeometry args={[12.2, 0.2, 3.2]} />
+      <RoundedBox args={[12.2, 0.2, 3.2]} radius={0.06} smoothness={4} position={[-4, 3.1, -4]} castShadow receiveShadow>
         <meshToonMaterial color="#2b1d14" gradientMap={gradientMap} />
-      </mesh>
+      </RoundedBox>
 
       <mesh position={[-2, 3.4, -3.5]} castShadow>
         <cylinderGeometry args={[0.2, 0.2, 0.4, 16]} />

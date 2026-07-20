@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { RoundedBox } from '@react-three/drei';
 import { WORDS } from '../engine/wordBank';
 import { Magnet, FRIDGE_DOOR_Z } from './Magnet';
 import { SlamButton } from './SlamButton';
@@ -34,15 +35,13 @@ export function Fridge() {
 
   return (
     <group position={[4, 0, -3.5]}>
-      <mesh position={[0, 4, 0]} castShadow receiveShadow>
-        <boxGeometry args={[3.5, 8, 3]} />
+      <RoundedBox args={[3.5, 8, 3]} radius={0.1} smoothness={4} position={[0, 4, 0]} castShadow receiveShadow>
         <meshToonMaterial color="#f6d98a" gradientMap={gradientMap} />
-      </mesh>
+      </RoundedBox>
 
-      <mesh position={[0, 4, 1.55]} receiveShadow>
-        <boxGeometry args={[3.6, 7.8, 0.2]} />
+      <RoundedBox args={[3.6, 7.8, 0.2]} radius={0.06} smoothness={4} position={[0, 4, 1.55]} receiveShadow>
         <meshToonMaterial color="#f6d98a" gradientMap={gradientMap} />
-      </mesh>
+      </RoundedBox>
 
       {magnetData.map(({ word, index, initialPosition }) => (
         <Magnet
