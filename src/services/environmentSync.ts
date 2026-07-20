@@ -61,12 +61,14 @@ export async function fetchEnvironmentSnapshot(fetchImpl: typeof fetch = fetch):
   const now = new Date();
   try {
     const geo = (await fetchJsonWithTimeout(IP_GEOLOCATION_URL, fetchImpl)) as IpGeolocationResponse;
-    if (typeof geo.latitude !== 'number' || typeof geo.longitude !== 'number') {
+    if (!Number.isFinite(geo.latitude) || !Number.isFinite(geo.longitude)) {
       throw new Error('IP geolocation response missing latitude/longitude');
     }
+    const lat = geo.latitude as number;
+    const lon = geo.longitude as number;
 
     const weather = (await fetchJsonWithTimeout(
-      buildWeatherUrl(geo.latitude, geo.longitude),
+      buildWeatherUrl(lat, lon),
       fetchImpl,
     )) as OpenMeteoResponse;
 
@@ -91,7 +93,7 @@ export async function fetchEnvironmentSnapshot(fetchImpl: typeof fetch = fetch):
 
     return {
       preset: timeOfDayFromSunTimes(now, sunrise, sunset),
-      season: seasonFromDate(now, geo.latitude),
+      season: seasonFromDate(now, lat),
       weatherCode,
       source: 'live',
     };

@@ -55,6 +55,15 @@ describe('fetchEnvironmentSnapshot', () => {
     expect(snapshot.weatherCode).toBeNull();
   });
 
+  it('falls back to clock-only snapshot when geolocation response has NaN latitude/longitude', async () => {
+    const fetchImpl = vi.fn().mockResolvedValueOnce(jsonResponse({ latitude: NaN, longitude: NaN }));
+
+    const snapshot = await fetchEnvironmentSnapshot(fetchImpl);
+
+    expect(snapshot.source).toBe('fallback');
+    expect(snapshot.weatherCode).toBeNull();
+  });
+
   it('falls back to clock-only snapshot when weather request fails', async () => {
     const fetchImpl = vi
       .fn()
