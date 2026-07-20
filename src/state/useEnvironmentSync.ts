@@ -9,6 +9,9 @@ const SYNC_INTERVAL_MS = 15 * 60 * 1000;
  * `fetchEnvironmentSnapshot` once on mount and every `SYNC_INTERVAL_MS` after.
  * Applying is a no-op while the store is in manual mode (see
  * `applyEnvironmentSnapshot` in `sceneStore.ts`), so this can run unconditionally.
+ *
+ * Additionally, re-syncs immediately whenever `environmentMode` transitions
+ * back to `'auto'`, so toggling from manual to auto is instant with fresh data.
  */
 export function useEnvironmentSync(): void {
   useEffect(() => {
@@ -28,5 +31,17 @@ export function useEnvironmentSync(): void {
       cancelled = true;
       clearInterval(intervalId);
     };
+  }, []);
+
+  // Re-sync immediately when environmentMode transitions to 'auto'.
+  // Using prevState comparison avoids double-syncing on mount.
+  useEffect(() => {
+    return useSceneStore.subscribe((state, prevState) => {
+      if (state.environmentMode === 'auto' && prevState.environmentMode !== 'auto') {
+        fetchEnvironmentSnapshot().then((snapshot) => {
+          useSceneStore.getState().applyEnvironmentSnapshot(snapshot);
+        });
+      }
+    });
   }, []);
 }

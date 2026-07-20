@@ -116,6 +116,13 @@ describe('applyEnvironmentModifiers', () => {
     expect(rain.fogColor).not.toBe(base.fogColor);
   });
 
+  it('buckets snow-shower code 85 as precipitation (same intensity as rain code 61)', () => {
+    const base = LIGHTING_PRESETS.day;
+    const rain = applyEnvironmentModifiers(base, 'summer', 61);
+    const snowShower = applyEnvironmentModifiers(base, 'summer', 85);
+    expect(snowShower.directionalIntensity).toBe(rain.directionalIntensity);
+  });
+
   it('dims and shifts fog for fog codes (45, 48)', () => {
     const base = LIGHTING_PRESETS.day;
     const result = applyEnvironmentModifiers(base, 'summer', 45);

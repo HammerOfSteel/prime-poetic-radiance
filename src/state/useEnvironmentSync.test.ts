@@ -70,4 +70,31 @@ describe('useEnvironmentSync', () => {
     await vi.advanceTimersByTimeAsync(15 * 60 * 1000);
     expect(environmentSync.fetchEnvironmentSnapshot).toHaveBeenCalledTimes(1);
   });
+
+  it('re-syncs immediately when environmentMode transitions back to auto', async () => {
+    const snapshot: environmentSync.EnvironmentSnapshot = {
+      preset: 'day',
+      season: 'summer',
+      weatherCode: 0,
+      source: 'live',
+    };
+    vi.spyOn(environmentSync, 'fetchEnvironmentSnapshot').mockResolvedValue(snapshot);
+
+    renderHook(() => useEnvironmentSync());
+    await vi.waitFor(() => {
+      expect(environmentSync.fetchEnvironmentSnapshot).toHaveBeenCalledTimes(1);
+    });
+
+    // Switch to manual mode
+    useSceneStore.getState().setEnvironmentMode('manual');
+    // Switch back to auto — should trigger an immediate sync
+    useSceneStore.getState().setEnvironmentMode('auto');
+
+    await vi.waitFor(() => {
+      expect(environmentSync.fetchEnvironmentSnapshot).toHaveBeenCalledTimes(2);
+    });
+
+    // Confirm the interval timer was NOT needed — no 15-minute advance
+    expect(environmentSync.fetchEnvironmentSnapshot).toHaveBeenCalledTimes(2);
+  });
 });

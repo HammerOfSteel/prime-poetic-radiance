@@ -71,7 +71,7 @@ const WEATHER_MODIFIERS: Record<WeatherBucket, WeatherModifier> = {
 function weatherBucketFromCode(code: number): WeatherBucket {
   if (code === 0) return 'clear';
   if (code === 45 || code === 48) return 'fog';
-  if ((code >= 51 && code <= 82) || code >= 95) return 'precipitation';
+  if ((code >= 51 && code <= 86) || code >= 95) return 'precipitation';
   return 'overcast'; // codes 1-3 and any other unmapped code
 }
 
