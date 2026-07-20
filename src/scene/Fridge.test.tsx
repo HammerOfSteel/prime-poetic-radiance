@@ -6,6 +6,6 @@ describe('Fridge', () => {
   it('mounts without throwing and renders 35 magnets plus the fridge body/door', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Fridge />);
     const meshes = renderer.scene.children[0].children.filter((child) => child.type === 'Mesh');
-    expect(meshes.length).toBe(37); // body + door + 35 magnets
+    expect(meshes.length).toBe(39); // body + door + 35 magnets + SlamButton + TesseractButton
   });
 });

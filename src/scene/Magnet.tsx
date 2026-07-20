@@ -11,9 +11,10 @@ export interface MagnetProps {
   id: string;
   word: string;
   initialPosition: [number, number, number];
+  onMeshReady?: (mesh: THREE.Mesh | null) => void;
 }
 
-export function Magnet({ id, word, initialPosition }: MagnetProps) {
+export function Magnet({ id, word, initialPosition, onMeshReady }: MagnetProps) {
   const { camera } = useThree();
   const meshRef = useRef<THREE.Mesh>(null);
   const [position, setPosition] = useState(initialPosition);
@@ -44,7 +45,10 @@ export function Magnet({ id, word, initialPosition }: MagnetProps) {
 
   return (
     <mesh
-      ref={meshRef}
+      ref={(node) => {
+        meshRef.current = node;
+        onMeshReady?.(node);
+      }}
       position={position}
       castShadow
       receiveShadow
