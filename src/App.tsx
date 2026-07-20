@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import gsap from 'gsap';
@@ -6,6 +6,7 @@ import { Kitchen } from './scene/Kitchen';
 import { Fridge } from './scene/Fridge';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
+import { TransitionOverlay } from './scene/TransitionOverlay';
 import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
 import { useSceneStore } from './state/sceneStore';
@@ -13,8 +14,18 @@ import { useSceneStore } from './state/sceneStore';
 const CAMERA_ZOOMED_IN: [number, number, number] = [4, 5, 3.5];
 const CAMERA_ZOOMED_OUT: [number, number, number] = [0, 4, 15];
 
-function CameraRig({ isZoomedIn, onTweenChange }: { isZoomedIn: boolean; onTweenChange: (tweening: boolean) => void }) {
+function CameraRig({
+  isZoomedIn,
+  onTweenChange,
+  onOverlayProgress,
+}: {
+  isZoomedIn: boolean;
+  onTweenChange: (tweening: boolean) => void;
+  onOverlayProgress: (progress: number) => void;
+}) {
   const { camera } = useThree();
+  const overlayTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     const [x, y, z] = isZoomedIn ? CAMERA_ZOOMED_IN : CAMERA_ZOOMED_OUT;
@@ -28,7 +39,20 @@ function CameraRig({ isZoomedIn, onTweenChange }: { isZoomedIn: boolean; onTween
       ease: 'power2.inOut',
       onComplete: () => onTweenChange(false),
     });
-  }, [camera, isZoomedIn, onTweenChange]);
+
+    overlayTimelineRef.current?.kill();
+
+    if (!isInitialMount.current) {
+      const overlay = { progress: 0 };
+      overlayTimelineRef.current = gsap
+        .timeline({ onUpdate: () => onOverlayProgress(overlay.progress) })
+        .to(overlay, { progress: 1, duration: 0.25, ease: 'power1.in' })
+        .to(overlay, { progress: 1, duration: 0.1 })
+        .to(overlay, { progress: 0, duration: 0.25, ease: 'power1.out' });
+    } else {
+      isInitialMount.current = false;
+    }
+  }, [camera, isZoomedIn, onTweenChange, onOverlayProgress]);
 
   return null;
 }
@@ -37,6 +61,7 @@ function App() {
   const isZoomedIn = useSceneStore((state) => state.isZoomedIn);
   const zoomToFridge = useSceneStore((state) => state.zoomToFridge);
   const [isTweening, setIsTweening] = useState(false);
+  const [overlayProgress, setOverlayProgress] = useState(0);
 
   const cameraTarget: [number, number, number] = isZoomedIn ? [4, 5, -1.85] : [0, 3, 0];
 
@@ -50,7 +75,7 @@ function App() {
             if (!isZoomedIn) zoomToFridge();
           }}
         >
-          <CameraRig isZoomedIn={isZoomedIn} onTweenChange={setIsTweening} />
+          <CameraRig isZoomedIn={isZoomedIn} onTweenChange={setIsTweening} onOverlayProgress={setOverlayProgress} />
           <Lighting />
           <Kitchen />
           <Fridge />
@@ -63,6 +88,7 @@ function App() {
           />
         </Canvas>
       </CanvasErrorBoundary>
+      <TransitionOverlay progress={overlayProgress} />
       <HUD />
       <StepBackButton />
     </div>
