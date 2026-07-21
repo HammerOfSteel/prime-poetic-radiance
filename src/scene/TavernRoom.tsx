@@ -1,7 +1,13 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import * as THREE from 'three';
+import gsap from 'gsap';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
-import { createGrainTexture, createWoodGrainTexture } from './proceduralTextures';
+import { createGrainTexture, createWoodGrainTexture, createSoftCircleTexture } from './proceduralTextures';
+
+const HEARTH_POSITION: [number, number, number] = [-6, 2.5, -4.6];
+const HEARTH_FLAME_COUNT = 3;
+const HEARTH_FLICKER_BASE_INTENSITY = 1.1;
 
 const BARREL_POSITIONS: [number, number, number][] = [
   [4, 0.6, -5],
@@ -34,6 +40,42 @@ export function TavernRoom() {
   const floorWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [8, 8], seed: 501 }), []);
   const wallGrain = useMemo(() => createGrainTexture({ repeat: [6, 3], seed: 502 }), []);
   const benchWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [4, 1], seed: 503 }), []);
+  const flameTexture = useMemo(() => createSoftCircleTexture(), []);
+  const flameRefs = useRef<(THREE.Sprite | null)[]>([]);
+  const flickerLightRef = useRef<THREE.PointLight | null>(null);
+
+  useEffect(() => {
+    const [hx, hy, hz] = HEARTH_POSITION;
+    const flameTimelines = flameRefs.current.map((sprite, index) => {
+      if (!sprite) return null;
+      const material = sprite.material as THREE.SpriteMaterial;
+      const drift = index % 2 === 0 ? 0.15 : -0.15;
+      const duration = 0.5 + index * 0.15;
+
+      sprite.position.set(hx + drift * 0.5, hy, hz);
+      const tl = gsap.timeline({ repeat: -1, yoyo: true, delay: index * 0.1 });
+      tl.to(sprite.position, { x: hx + drift, y: hy + 0.3, duration, ease: 'sine.inOut' }, 0)
+        .to(sprite.scale, { x: 0.9, y: 1.1, duration, ease: 'sine.inOut' }, 0)
+        .to(material, { opacity: 0.55, duration, ease: 'sine.inOut' }, 0);
+      return tl;
+    });
+
+    const light = flickerLightRef.current;
+    const lightTimeline = light
+      ? gsap.timeline({ repeat: -1 }).to(light, {
+          intensity: HEARTH_FLICKER_BASE_INTENSITY * 1.4,
+          duration: 0.18,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        })
+      : null;
+
+    return () => {
+      flameTimelines.forEach((tl) => tl?.kill());
+      lightTimeline?.kill();
+    };
+  }, []);
 
   return (
     <>
@@ -57,10 +99,34 @@ export function TavernRoom() {
         <meshToonMaterial color="#2b1a10" gradientMap={gradientMap} />
       </mesh>
 
-      <mesh position={[-6, 2, -4.8]}>
-        <planeGeometry args={[2, 2]} />
-        <meshBasicMaterial color="#ff8c3c" />
-      </mesh>
+      {/* Animated flickering hearth fire: layered flame sprites + a flickering point light */}
+      {Array.from({ length: HEARTH_FLAME_COUNT }, (_, index) => (
+        <sprite
+          key={index}
+          position={HEARTH_POSITION}
+          scale={[0.7, 0.9, 1]}
+          data-kind="hearth-flame"
+          ref={(el) => {
+            flameRefs.current[index] = el;
+          }}
+        >
+          <spriteMaterial
+            map={flameTexture}
+            color={index === 0 ? '#ffcf6b' : '#ff8c3c'}
+            transparent
+            depthWrite={false}
+            opacity={0.4}
+          />
+        </sprite>
+      ))}
+      <pointLight
+        ref={flickerLightRef}
+        position={HEARTH_POSITION}
+        color="#ff9c4c"
+        intensity={HEARTH_FLICKER_BASE_INTENSITY}
+        distance={8}
+        decay={2}
+      />
 
       <RoundedBox
         args={[10, 1, 3]}

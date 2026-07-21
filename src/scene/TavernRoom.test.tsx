@@ -41,12 +41,19 @@ describe('TavernRoom', () => {
     const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'sconce-bracket' }).length).toBe(2);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'sconce-flame' }).length).toBe(2);
-    expect(renderer.scene.findAllByType('PointLight').length).toBe(2);
+    // Note: PointLight count is now 3 total (2 sconces + 1 hearth flicker light from Task 6)
+    expect(renderer.scene.findAllByType('PointLight').length).toBe(3);
   });
 
   it('renders tankards on the bench', async () => {
     const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'tankard-body' }).length).toBe(3);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'tankard-handle' }).length).toBe(3);
+  });
+
+  it('replaces the static hearth glow with animated flame sprites and a flickering point light', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'hearth-flame' }).length).toBe(3);
+    expect(renderer.scene.findAllByType('PointLight').length).toBe(3);
   });
 });
