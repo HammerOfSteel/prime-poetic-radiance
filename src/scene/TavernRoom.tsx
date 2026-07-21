@@ -9,6 +9,13 @@ const BARREL_POSITIONS: [number, number, number][] = [
   [4.65, 1.8, -5],
 ];
 const BARREL_BAND_Y_OFFSETS = [-0.35, 0.35];
+const SHELF_BOTTLES: { x: number; height: number; color: string }[] = [
+  { x: -0.7, height: 0.5, color: '#4a7a5a' },
+  { x: -0.35, height: 0.6, color: '#6a3a2a' },
+  { x: 0, height: 0.45, color: '#4a7a5a' },
+  { x: 0.35, height: 0.55, color: '#8a6a3a' },
+  { x: 0.7, height: 0.5, color: '#6a3a2a' },
+];
 
 /** Static tavern interior: wood floor/walls, a warm hearth glow, and
  * (from this plan onward) furniture/decor props and procedural textures.
@@ -72,6 +79,25 @@ export function TavernRoom() {
             </mesh>
           ))}
         </group>
+      ))}
+
+      {/* Wall shelf with bottles, mounted on the back wall right of the barrels */}
+      <RoundedBox
+        args={[2, 0.12, 0.5]}
+        radius={0.03}
+        smoothness={4}
+        position={[7, 3.5, -5.3]}
+        castShadow
+        receiveShadow
+        data-kind="shelf-plank"
+      >
+        <meshToonMaterial color="#6a4527" gradientMap={gradientMap} map={benchWoodGrain} />
+      </RoundedBox>
+      {SHELF_BOTTLES.map(({ x, height, color }, index) => (
+        <mesh key={index} position={[7 + x, 3.56 + height / 2, -5.3]} castShadow data-kind="shelf-bottle">
+          <cylinderGeometry args={[0.09, 0.11, height, 10]} />
+          <meshToonMaterial color={color} gradientMap={gradientMap} />
+        </mesh>
       ))}
     </>
   );

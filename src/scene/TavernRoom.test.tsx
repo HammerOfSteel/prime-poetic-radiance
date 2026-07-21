@@ -30,4 +30,10 @@ describe('TavernRoom', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'barrel' }).length).toBe(3);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'barrel-band' }).length).toBe(6);
   });
+
+  it('renders a wall shelf with bottles', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-plank' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-bottle' }).length).toBe(5);
+  });
 });
