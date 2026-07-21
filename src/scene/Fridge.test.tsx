@@ -8,9 +8,10 @@ describe('Fridge', () => {
     useSceneStore.setState(useSceneStore.getInitialState());
   });
 
-  it('mounts without throwing and renders 35 magnets plus the fridge body/door', async () => {
+  it('mounts without throwing and renders 35 magnets plus the fridge body/door/detailing', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Fridge />);
     const meshes = renderer.scene.children[0].children.filter((child) => child.type === 'Mesh');
-    expect(meshes.length).toBe(39); // body + door + 35 magnets + SlamButton + TesseractButton
+    // body + door + handle + kick-plate + 3 vents + 35 magnets + SlamButton + TesseractButton
+    expect(meshes.length).toBe(44);
   });
 });
