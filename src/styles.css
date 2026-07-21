@@ -37,3 +37,42 @@ button:active { transform: translateY(1px); }
     background: #fdf6ec;
     pointer-events: none;
 }
+
+.postfx-settings-button {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    cursor: pointer;
+}
+
+.postfx-settings-panel {
+    position: fixed;
+    bottom: 5rem;
+    right: 1.5rem;
+    padding: 1rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 12rem;
+}
+
+.postfx-settings-panel label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.postfx-settings-panel button {
+    margin-top: 0.25rem;
+}
