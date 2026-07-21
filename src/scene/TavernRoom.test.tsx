@@ -24,4 +24,10 @@ describe('TavernRoom', () => {
     const benchMaterial = (bench.instance as THREE.Mesh).material as THREE.MeshToonMaterial;
     expect(benchMaterial.map).not.toBeNull();
   });
+
+  it('renders a 3-barrel cluster with metal bands', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'barrel' }).length).toBe(3);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'barrel-band' }).length).toBe(6);
+  });
 });

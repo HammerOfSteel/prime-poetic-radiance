@@ -3,6 +3,13 @@ import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture } from './proceduralTextures';
 
+const BARREL_POSITIONS: [number, number, number][] = [
+  [4, 0.6, -5],
+  [5.3, 0.6, -5],
+  [4.65, 1.8, -5],
+];
+const BARREL_BAND_Y_OFFSETS = [-0.35, 0.35];
+
 /** Static tavern interior: wood floor/walls, a warm hearth glow, and
  * (from this plan onward) furniture/decor props and procedural textures.
  * Mirrors Kitchen.tsx's structure. */
@@ -50,6 +57,22 @@ export function TavernRoom() {
       >
         <meshToonMaterial color="#8a5a34" gradientMap={gradientMap} map={benchWoodGrain} />
       </RoundedBox>
+
+      {/* Barrel cluster stacked against the back wall, opposite the hearth */}
+      {BARREL_POSITIONS.map((position, index) => (
+        <group key={index} position={position}>
+          <mesh castShadow receiveShadow data-kind="barrel">
+            <cylinderGeometry args={[0.6, 0.6, 1.2, 16]} />
+            <meshToonMaterial color="#7a5230" gradientMap={gradientMap} map={benchWoodGrain} />
+          </mesh>
+          {BARREL_BAND_Y_OFFSETS.map((yOffset) => (
+            <mesh key={yOffset} position={[0, yOffset, 0]} data-kind="barrel-band">
+              <torusGeometry args={[0.61, 0.04, 8, 16]} />
+              <meshToonMaterial color="#2b1d14" gradientMap={gradientMap} />
+            </mesh>
+          ))}
+        </group>
+      ))}
     </>
   );
 }
