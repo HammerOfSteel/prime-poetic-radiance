@@ -12,7 +12,7 @@ describe('Kitchen', () => {
   it('mounts without throwing and renders at least a floor and two walls', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Kitchen />);
     const meshes = renderer.scene.children.filter((child) => child.type === 'Mesh');
-    expect(meshes.length).toBeGreaterThanOrEqual(3);
+    expect(meshes.length).toBeGreaterThanOrEqual(30);
   });
 
   it('applies a procedural wood-grain texture to the floor', async () => {
