@@ -56,4 +56,10 @@ describe('TavernRoom', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'hearth-flame' }).length).toBe(3);
     expect(renderer.scene.findAllByType('PointLight').length).toBe(3);
   });
+
+  it('mounts TavernAtmosphere, adding the ember and dust-mote particle layers', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    const points = renderer.scene.findAllByType('Points');
+    expect(points.length).toBe(2);
+  });
 });

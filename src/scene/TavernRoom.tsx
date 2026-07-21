@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture, createSoftCircleTexture } from './proceduralTextures';
+import { TavernAtmosphere } from './TavernAtmosphere';
 
 const HEARTH_POSITION: [number, number, number] = [-6, 2.5, -4.6];
 const HEARTH_FLAME_COUNT = 3;
@@ -208,6 +209,8 @@ export function TavernRoom() {
           </mesh>
         </group>
       ))}
+
+      <TavernAtmosphere hearthPosition={HEARTH_POSITION} />
     </>
   );
 }
