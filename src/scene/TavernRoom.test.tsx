@@ -36,4 +36,11 @@ describe('TavernRoom', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-plank' }).length).toBe(1);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-bottle' }).length).toBe(5);
   });
+
+  it('renders two wall sconces with point lights', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'sconce-bracket' }).length).toBe(2);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'sconce-flame' }).length).toBe(2);
+    expect(renderer.scene.findAllByType('PointLight').length).toBe(2);
+  });
 });

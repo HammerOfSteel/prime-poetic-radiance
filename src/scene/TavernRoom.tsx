@@ -16,6 +16,10 @@ const SHELF_BOTTLES: { x: number; height: number; color: string }[] = [
   { x: 0.35, height: 0.55, color: '#8a6a3a' },
   { x: 0.7, height: 0.5, color: '#6a3a2a' },
 ];
+const SCONCE_POSITIONS: [number, number, number][] = [
+  [-1, 4.5, -5.4],
+  [9, 4.5, -5.4],
+];
 
 /** Static tavern interior: wood floor/walls, a warm hearth glow, and
  * (from this plan onward) furniture/decor props and procedural textures.
@@ -98,6 +102,26 @@ export function TavernRoom() {
           <cylinderGeometry args={[0.09, 0.11, height, 10]} />
           <meshToonMaterial color={color} gradientMap={gradientMap} />
         </mesh>
+      ))}
+
+      {/* Wall sconces flanking the back wall, adding warm fill light points */}
+      {SCONCE_POSITIONS.map((position, index) => (
+        <group key={index} position={position}>
+          <mesh castShadow data-kind="sconce-bracket">
+            <boxGeometry args={[0.25, 0.4, 0.25]} />
+            <meshToonMaterial color="#2b1d14" gradientMap={gradientMap} />
+          </mesh>
+          <mesh position={[0, 0.35, 0.1]} data-kind="sconce-flame">
+            <coneGeometry args={[0.12, 0.35, 8]} />
+            <meshToonMaterial
+              color="#3d2b1f"
+              gradientMap={gradientMap}
+              emissive="#ffb454"
+              emissiveIntensity={1.4}
+            />
+          </mesh>
+          <pointLight color="#ffb454" intensity={0.5} distance={5} decay={2} position={[0, 0.35, 0.2]} />
+        </group>
       ))}
     </>
   );
