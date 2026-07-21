@@ -43,4 +43,10 @@ describe('TavernRoom', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'sconce-flame' }).length).toBe(2);
     expect(renderer.scene.findAllByType('PointLight').length).toBe(2);
   });
+
+  it('renders tankards on the bench', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'tankard-body' }).length).toBe(3);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'tankard-handle' }).length).toBe(3);
+  });
 });

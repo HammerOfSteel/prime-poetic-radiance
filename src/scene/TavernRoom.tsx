@@ -20,6 +20,11 @@ const SCONCE_POSITIONS: [number, number, number][] = [
   [-1, 4.5, -5.4],
   [9, 4.5, -5.4],
 ];
+const TANKARD_POSITIONS: [number, number, number][] = [
+  [-6.5, 1.0, -2.3],
+  [-5.5, 1.0, -1.7],
+  [-2, 1.0, -2],
+];
 
 /** Static tavern interior: wood floor/walls, a warm hearth glow, and
  * (from this plan onward) furniture/decor props and procedural textures.
@@ -121,6 +126,20 @@ export function TavernRoom() {
             />
           </mesh>
           <pointLight color="#ffb454" intensity={0.5} distance={5} decay={2} position={[0, 0.35, 0.2]} />
+        </group>
+      ))}
+
+      {/* Tankards resting on the bench top */}
+      {TANKARD_POSITIONS.map((position, index) => (
+        <group key={index} position={position}>
+          <mesh position={[0, 0.13, 0]} castShadow data-kind="tankard-body">
+            <cylinderGeometry args={[0.13, 0.11, 0.26, 12]} />
+            <meshToonMaterial color="#9a9488" gradientMap={gradientMap} />
+          </mesh>
+          <mesh position={[0.15, 0.13, 0]} rotation={[0, 0, Math.PI / 2]} data-kind="tankard-handle">
+            <torusGeometry args={[0.08, 0.02, 8, 12]} />
+            <meshToonMaterial color="#7a7468" gradientMap={gradientMap} />
+          </mesh>
         </group>
       ))}
     </>
