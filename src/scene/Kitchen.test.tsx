@@ -42,4 +42,12 @@ describe('Kitchen', () => {
     const curtains = renderer.scene.findAllByProps({ 'data-kind': 'curtain' });
     expect(curtains.length).toBe(2);
   });
+
+  it('renders the wall shelf with jars and books, the pendant lamp, and string lights', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-jar' }).length).toBe(2);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'shelf-book' }).length).toBe(3);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'pendant-bulb' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'string-light' }).length).toBe(9);
+  });
 });
