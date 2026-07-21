@@ -30,7 +30,7 @@ export interface SceneState {
 
 function layoutForScene(id: SceneId): MagnetLayoutEntry[] {
   const scene = SCENES[id];
-  return createMagnetLayout(WORDS, scene.magnetCount, scene.wordTheme, scene.magnetSurfaceZ);
+  return createMagnetLayout(WORDS, scene.magnetCount, scene.wordTheme, scene.magnetSurfaceZ, scene.magnetBoardBounds);
 }
 
 export const useSceneStore = create<SceneState>((set, get) => ({

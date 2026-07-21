@@ -1,12 +1,25 @@
 import { pickWeightedRandom } from './generatePoem';
 import { REQUIRED_LITERALS } from './templates';
 import { getThemeWeight, type WordTheme } from './wordBank';
+import { measureWordTextureWidth } from './wordSizing';
 
 export interface MagnetLayoutEntry {
   word: string;
   index: number;
   position: [number, number, number];
 }
+
+export interface MagnetBoardBounds {
+  x: [number, number];
+  y: [number, number];
+}
+
+/** Horizontal/vertical gaps between packed magnets, and the jitter applied
+ * within each cell for a slightly organic (non-perfectly-gridded) look.
+ * Jitter is kept well under half a gap so it can never cause an overlap. */
+const GAP_X = 0.14;
+const ROW_HEIGHT = 0.32;
+const JITTER = 0.04;
 
 /**
  * Selects up to `count` distinct words from `pool`, weighted by theme
@@ -31,10 +44,60 @@ export function selectMagnetWords(
 }
 
 /**
+ * Packs `words` left-to-right, top-to-bottom into `bounds` like a shelf
+ * (bin) packing algorithm, wrapping to a new row whenever the next word
+ * would exceed the board's right edge, and wrapping back to the top row
+ * (shifted right, to start a new "column block") if it runs out of rows —
+ * so magnets never overlap regardless of how many are packed in.
+ *
+ * Replaces the previous pure-random scatter (`x = (rng()-0.5)*3`,
+ * `y = 4 + (rng()-0.2)*3`), which had no collision avoidance and routinely
+ * left magnets stacked on top of each other, making it hard to read
+ * individual words or arrange them into sentences.
+ */
+export function packMagnetPositions(
+  words: string[],
+  bounds: MagnetBoardBounds,
+  surfaceZ: number,
+  rng: () => number = Math.random,
+): [number, number, number][] {
+  const [minX, maxX] = bounds.x;
+  const [minY, maxY] = bounds.y;
+  const boardWidth = maxX - minX;
+
+  let cursorX = minX + GAP_X / 2;
+  let cursorY = maxY - ROW_HEIGHT / 2;
+  let columnBlockOffset = 0;
+
+  return words.map((word) => {
+    const width = measureWordTextureWidth(word) * 0.5;
+
+    if (cursorX + width > minX + columnBlockOffset + boardWidth && cursorX > minX + columnBlockOffset + GAP_X / 2) {
+      cursorX = minX + columnBlockOffset + GAP_X / 2;
+      cursorY -= ROW_HEIGHT;
+    }
+
+    if (cursorY < minY) {
+      // Ran out of vertical room (more words than the board can neatly fit) —
+      // start a fresh column block to the right rather than overlapping.
+      columnBlockOffset += boardWidth;
+      cursorX = minX + columnBlockOffset + GAP_X / 2;
+      cursorY = maxY - ROW_HEIGHT / 2;
+    }
+
+    const jitterX = (rng() - 0.5) * JITTER;
+    const jitterY = (rng() - 0.5) * JITTER;
+    const position: [number, number, number] = [cursorX + width / 2 + jitterX, cursorY + jitterY, surfaceZ];
+
+    cursorX += width + GAP_X;
+    return position;
+  });
+}
+
+/**
  * Builds a fresh magnet layout for a scene: selects theme-weighted words via
- * `selectMagnetWords` and scatters them to randomized starting positions
- * above `surfaceZ`, mirroring the placement math previously inline in
- * Fridge.tsx.
+ * `selectMagnetWords` and packs them into non-overlapping positions within
+ * `bounds` via `packMagnetPositions`.
  *
  * The template glue words in `REQUIRED_LITERALS` (e.g. "the", "is", "a") are
  * always reserved first (if present in `pool`), since they have no category
@@ -48,20 +111,18 @@ export function createMagnetLayout(
   count: number,
   theme: WordTheme,
   surfaceZ: number,
+  bounds: MagnetBoardBounds,
   rng: () => number = Math.random,
 ): MagnetLayoutEntry[] {
   const guaranteed = REQUIRED_LITERALS.filter((word) => pool.includes(word));
   const remainingPool = pool.filter((word) => !guaranteed.includes(word));
   const remainingCount = Math.max(0, count - guaranteed.length);
   const words = [...guaranteed, ...selectMagnetWords(remainingPool, remainingCount, theme, rng)];
+  const positions = packMagnetPositions(words, bounds, surfaceZ, rng);
 
   return words.map((word, index) => ({
     word,
     index,
-    position: [
-      (rng() - 0.5) * 3,
-      4 + (rng() - 0.2) * 3,
-      surfaceZ,
-    ] as [number, number, number],
+    position: positions[index],
   }));
 }
