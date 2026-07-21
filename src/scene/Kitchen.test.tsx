@@ -56,4 +56,16 @@ describe('Kitchen', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'plant-leaf' }).length).toBe(5);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'herb-leaf' }).length).toBe(4);
   });
+
+  it('mounts KitchenAtmosphere, which adds firefly sparkles only at night', async () => {
+    useSceneStore.setState({ lightingPreset: 'day' });
+    const dayRenderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    const dayPoints = dayRenderer.scene.findAllByType('Points');
+    expect(dayPoints.length).toBe(1);
+
+    useSceneStore.setState({ lightingPreset: 'night' });
+    const nightRenderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    const nightPoints = nightRenderer.scene.findAllByType('Points');
+    expect(nightPoints.length).toBe(2);
+  });
 });

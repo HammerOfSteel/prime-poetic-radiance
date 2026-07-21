@@ -4,10 +4,13 @@ import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture, createSkyGradientTexture, createSeededRng } from './proceduralTextures';
 import { useSceneStore } from '../state/sceneStore';
 import { LIGHTING_PRESETS } from '../engine/lightingPresets';
+import { KitchenAtmosphere } from './KitchenAtmosphere';
 
 const NIGHT_STAR_COUNT = 15;
 const NIGHT_STAR_X_RANGE: [number, number] = [-7.6, -2.4];
 const NIGHT_STAR_Y_RANGE: [number, number] = [4.2, 7.6];
+
+const KETTLE_STEAM_ORIGIN: [number, number, number] = [-2, 3.7, -3.3];
 
 const STRING_LIGHT_COUNT = 9;
 const STRING_LIGHT_X_RANGE: [number, number] = [-8, 6];
@@ -265,6 +268,7 @@ export function Kitchen() {
           <meshToonMaterial color={color} gradientMap={gradientMap} />
         </mesh>
       ))}
+      <KitchenAtmosphere lightingPreset={lightingPreset} kettlePosition={KETTLE_STEAM_ORIGIN} />
     </>
   );
 }
