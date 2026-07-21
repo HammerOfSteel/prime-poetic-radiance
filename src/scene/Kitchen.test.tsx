@@ -34,4 +34,12 @@ describe('Kitchen', () => {
     const nightStars = nightRenderer.scene.findAllByProps({ 'data-kind': 'night-star' });
     expect(nightStars.length).toBe(15);
   });
+
+  it('renders the braided rug and curtain props', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    const rugLayers = renderer.scene.findAllByProps({ 'data-kind': 'rug-layer' });
+    expect(rugLayers.length).toBe(3);
+    const curtains = renderer.scene.findAllByProps({ 'data-kind': 'curtain' });
+    expect(curtains.length).toBe(2);
+  });
 });
