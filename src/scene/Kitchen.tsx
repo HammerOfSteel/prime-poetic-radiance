@@ -15,6 +15,21 @@ const STRING_LIGHT_TOP_Y = 12.6;
 const STRING_LIGHT_SAG = 1.1;
 const STRING_LIGHT_Z = -5.35;
 
+const PLANT_LEAF_OFFSETS: Array<{ offset: [number, number, number]; scale: [number, number, number]; color: string }> = [
+  { offset: [0, 0.3, 0], scale: [0.5, 0.9, 0.5], color: '#7a9e5a' },
+  { offset: [0.3, 0.1, 0.15], scale: [0.45, 0.7, 0.45], color: '#6a8e4a' },
+  { offset: [-0.3, 0.05, -0.15], scale: [0.45, 0.75, 0.45], color: '#8aa96a' },
+  { offset: [0.15, 0.2, -0.3], scale: [0.4, 0.65, 0.4], color: '#7a9e5a' },
+  { offset: [-0.2, 0.15, 0.3], scale: [0.4, 0.7, 0.4], color: '#6a8e4a' },
+];
+
+const HERB_LEAF_OFFSETS: Array<{ x: number; color: string }> = [
+  { x: -0.18, color: '#6a8e4a' },
+  { x: -0.06, color: '#8aa96a' },
+  { x: 0.06, color: '#6a8e4a' },
+  { x: 0.18, color: '#8aa96a' },
+];
+
 export function Kitchen() {
   const gradientMap = useMemo(() => createToonGradientMap(), []);
   const wallGrain = useMemo(() => createGrainTexture({ repeat: [6, 3] }), []);
@@ -221,10 +236,35 @@ export function Kitchen() {
         <meshToonMaterial color="#cd6133" gradientMap={gradientMap} />
       </mesh>
 
-      <mesh position={[-7, 4.2, -4]} castShadow>
-        <sphereGeometry args={[0.6, 8, 8]} />
-        <meshToonMaterial color="#7a9e5a" gradientMap={gradientMap} />
-      </mesh>
+      {PLANT_LEAF_OFFSETS.map(({ offset, scale, color }, index) => (
+        <mesh
+          key={index}
+          position={[-7 + offset[0], 4.2 + offset[1], -4 + offset[2]]}
+          scale={scale}
+          castShadow
+          data-kind="plant-leaf"
+        >
+          <sphereGeometry args={[0.35, 8, 8]} />
+          <meshToonMaterial color={color} gradientMap={gradientMap} />
+        </mesh>
+      ))}
+
+      {/* Hanging herb bundle above the window */}
+      <RoundedBox args={[0.5, 0.15, 0.15]} radius={0.04} smoothness={2} position={[-5, 8.3, -5.3]} castShadow>
+        <meshToonMaterial color="#5a3a24" gradientMap={gradientMap} />
+      </RoundedBox>
+      {HERB_LEAF_OFFSETS.map(({ x, color }, index) => (
+        <mesh
+          key={index}
+          position={[-5 + x, 8.0, -5.3]}
+          rotation={[Math.PI, 0, 0]}
+          castShadow
+          data-kind="herb-leaf"
+        >
+          <coneGeometry args={[0.06, 0.6, 6]} />
+          <meshToonMaterial color={color} gradientMap={gradientMap} />
+        </mesh>
+      ))}
     </>
   );
 }

@@ -50,4 +50,10 @@ describe('Kitchen', () => {
     expect(renderer.scene.findAllByProps({ 'data-kind': 'pendant-bulb' }).length).toBe(1);
     expect(renderer.scene.findAllByProps({ 'data-kind': 'string-light' }).length).toBe(9);
   });
+
+  it('renders a multi-leaf plant cluster and a hanging herb bundle', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'plant-leaf' }).length).toBe(5);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'herb-leaf' }).length).toBe(4);
+  });
 });
