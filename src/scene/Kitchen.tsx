@@ -1,25 +1,29 @@
 import { useMemo } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
+import { createGrainTexture, createWoodGrainTexture } from './proceduralTextures';
 
 export function Kitchen() {
   const gradientMap = useMemo(() => createToonGradientMap(), []);
+  const wallGrain = useMemo(() => createGrainTexture({ repeat: [6, 3] }), []);
+  const floorWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [8, 8] }), []);
+  const counterWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [4, 1] }), []);
 
   return (
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[30, 30]} />
-        <meshToonMaterial color="#8a5a3b" gradientMap={gradientMap} />
+        <meshToonMaterial color="#8a5a3b" gradientMap={gradientMap} map={floorWoodGrain} />
       </mesh>
 
       <mesh position={[0, 7.5, -6]} receiveShadow>
         <boxGeometry args={[30, 15, 1]} />
-        <meshToonMaterial color="#f2e3c9" gradientMap={gradientMap} />
+        <meshToonMaterial color="#f2e3c9" gradientMap={gradientMap} map={wallGrain} />
       </mesh>
 
       <mesh position={[-10, 7.5, 0]} receiveShadow>
         <boxGeometry args={[1, 15, 30]} />
-        <meshToonMaterial color="#f2e3c9" gradientMap={gradientMap} />
+        <meshToonMaterial color="#f2e3c9" gradientMap={gradientMap} map={wallGrain} />
       </mesh>
 
       <mesh position={[-5, 6, -5.4]}>
@@ -28,7 +32,7 @@ export function Kitchen() {
       </mesh>
 
       <RoundedBox args={[12, 3, 3]} radius={0.1} smoothness={4} position={[-4, 1.5, -4]} castShadow receiveShadow>
-        <meshToonMaterial color="#c96a3e" gradientMap={gradientMap} />
+        <meshToonMaterial color="#c96a3e" gradientMap={gradientMap} map={counterWoodGrain} />
       </RoundedBox>
 
       <RoundedBox args={[12.2, 0.2, 3.2]} radius={0.06} smoothness={4} position={[-4, 3.1, -4]} castShadow receiveShadow>
