@@ -21,14 +21,26 @@ export interface MagnetBoardProps {
 export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPosition }: MagnetBoardProps) {
   const scene = SCENES[sceneId];
   const layout = useSceneStore((state) => state.magnetLayoutBySceneId[sceneId]) ?? [];
+  const homeLayout = useSceneStore((state) => state.homeLayoutBySceneId[sceneId]) ?? [];
+  const slamActiveWords = useSceneStore((state) => state.slamActiveWordsBySceneId[sceneId]) ?? [];
   const updateMagnetPosition = useSceneStore((state) => state.updateMagnetPosition);
   const regenerateMagnetLayout = useSceneStore((state) => state.regenerateMagnetLayout);
+  const setSlamActiveWords = useSceneStore((state) => state.setSlamActiveWords);
 
   const meshRefs = useRef(new Map<string, THREE.Object3D>());
 
   function registerMesh(word: string, mesh: THREE.Mesh | null) {
     if (mesh) meshRefs.current.set(word, mesh);
     else meshRefs.current.delete(word);
+  }
+
+  function getHomePosition(word: string): [number, number, number] | undefined {
+    return homeLayout.find((entry) => entry.word === word)?.position;
+  }
+
+  function handleSettled(word: string, position: [number, number, number]) {
+    const entry = layout.find((e) => e.word === word);
+    if (entry) updateMagnetPosition(sceneId, entry.index, position);
   }
 
   return (
@@ -47,9 +59,16 @@ export function MagnetBoard({ sceneId, slamButtonPosition, tesseractButtonPositi
       ))}
       <SlamButton
         position={slamButtonPosition}
-        theme={scene.wordTheme}
         getMagnetMesh={(word) => meshRefs.current.get(word)}
         availableWords={layout.map((entry) => entry.word)}
+        bounds={scene.magnetBoardBounds}
+        slamOptions={{
+          theme: scene.wordTheme,
+          previousPoemWords: slamActiveWords,
+          getHomePosition,
+          onPoemWordsChange: (words) => setSlamActiveWords(sceneId, words),
+          onSettled: handleSettled,
+        }}
       />
       <TesseractButton
         position={tesseractButtonPosition}

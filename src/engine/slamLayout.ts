@@ -6,7 +6,7 @@ import { measureWordTextureWidth } from '../engine/wordSizing';
 // so words must be laid out in that group's LOCAL space: 2.8 - 4 = -1.2.
 const START_X = -1.2;
 const PADDING = 0.1;
-const LINE_HEIGHT = 0.45;
+export const LINE_HEIGHT = 0.45;
 
 export interface SlamLayoutEntry {
   word: string;

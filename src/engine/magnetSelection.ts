@@ -17,9 +17,19 @@ export interface MagnetBoardBounds {
 /** Horizontal/vertical gaps between packed magnets, and the jitter applied
  * within each cell for a slightly organic (non-perfectly-gridded) look.
  * Jitter is kept well under half a gap so it can never cause an overlap. */
-const GAP_X = 0.14;
-const ROW_HEIGHT = 0.32;
+const GAP_X = 0.12;
+const ROW_HEIGHT = 0.3;
 const JITTER = 0.04;
+
+/**
+ * Vertical space reserved at the top of every board, excluded from the
+ * initial magnet grid so it stays empty. `SlamButton` targets this same
+ * band for its animated poem line, so slammed words land in guaranteed-
+ * clear space above the scattered grid instead of on top of already-placed
+ * magnets. The initial grid fills the remaining (lower) region instead.
+ * See `templates.ts`/`slamLayout.ts` for the matching poem-side layout.
+ */
+export const POEM_BAND_HEIGHT = 1.1;
 
 /**
  * Selects up to `count` distinct words from `pool`, weighted by theme
@@ -105,6 +115,11 @@ export function packMagnetPositions(
  * content-word pool — leaving most poem templates unable to fill their
  * connective tokens. The remaining `count` budget is filled via weighted
  * random selection from the rest of the pool, as before.
+ *
+ * Packing is restricted to `bounds` minus `POEM_BAND_HEIGHT` off the top,
+ * reserving that band exclusively for the slam-button poem line (see
+ * `SlamButton.tsx`) so it never lands on top of the initial grid, and the
+ * initial grid never lands on top of it either.
  */
 export function createMagnetLayout(
   pool: string[],
@@ -118,7 +133,9 @@ export function createMagnetLayout(
   const remainingPool = pool.filter((word) => !guaranteed.includes(word));
   const remainingCount = Math.max(0, count - guaranteed.length);
   const words = [...guaranteed, ...selectMagnetWords(remainingPool, remainingCount, theme, rng)];
-  const positions = packMagnetPositions(words, bounds, surfaceZ, rng);
+  const gridMaxY = Math.max(bounds.y[1] - POEM_BAND_HEIGHT, bounds.y[0]);
+  const gridBounds: MagnetBoardBounds = { x: bounds.x, y: [bounds.y[0], gridMaxY] };
+  const positions = packMagnetPositions(words, gridBounds, surfaceZ, rng);
 
   return words.map((word, index) => ({
     word,

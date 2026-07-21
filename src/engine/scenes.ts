@@ -76,7 +76,14 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     // Board mesh is positioned at `surfaceZ - 0.15` (see
     // TavernNoticeboard.tsx) so this plane sits just in front of its face.
     magnetSurfaceZ: -1.7,
-    magnetCount: 30,
+    // Lower than kitchen's 35: this board is much shorter (see
+    // magnetBoardBounds below), and the grid must also leave room for
+    // POEM_BAND_HEIGHT reserved at the top (magnetSelection.ts) for the
+    // slam-button poem line. 26 keeps the grid comfortably within its
+    // shrunk region without overflowing into an off-board column, while
+    // leaving enough budget above REQUIRED_LITERALS's 11 forced glue words
+    // for a healthy variety of theme content words too.
+    magnetCount: 26,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
     usesEnvironmentLighting: false,
@@ -99,7 +106,8 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     // Board mesh is positioned at `surfaceZ - 0.15` (see DungeonTablet.tsx)
     // so this plane sits just in front of its face.
     magnetSurfaceZ: -1.7,
-    magnetCount: 30,
+    // See tavern's magnetCount comment above — same reasoning applies here.
+    magnetCount: 26,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
     usesEnvironmentLighting: true,
