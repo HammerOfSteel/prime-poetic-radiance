@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture, createSkyGradientTexture, createSeededRng } from './proceduralTextures';
@@ -45,6 +45,12 @@ export function Kitchen() {
     const preset = LIGHTING_PRESETS[lightingPreset];
     return createSkyGradientTexture(preset.fogColor, preset.ambientColor);
   }, [lightingPreset]);
+
+  useEffect(() => {
+    return () => {
+      skyTexture.dispose();
+    };
+  }, [skyTexture]);
 
   const nightStarPositions = useMemo<[number, number, number][]>(() => {
     const rng = createSeededRng(99);
