@@ -87,13 +87,20 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
     usesEnvironmentLighting: false,
+    // Brightened from the original values (ambientColor '#5a3a24',
+    // directionalIntensity 0.9, fogColor '#1a0f08') which read as almost
+    // uniformly black once the global post-processing vignette/AO pass
+    // (Phase 6b) was layered on top — this scene has no day/night preset
+    // to fall back on if its one fixed preset is too dim. Kept the warm
+    // firelit hue, just lifted its brightness roughly in line with
+    // Kitchen's dimmest (evening) preset so props/textures stay legible.
     fixedLightingPreset: {
-      ambientColor: '#5a3a24',
-      directionalColor: '#ffb454',
-      fillColor: '#ff8c3c',
-      fogColor: '#1a0f08',
-      directionalIntensity: 0.9,
-      fillIntensity: 1.1,
+      ambientColor: '#c68f5a',
+      directionalColor: '#ffc878',
+      fillColor: '#ff9c50',
+      fogColor: '#4a2e1a',
+      directionalIntensity: 2.8,
+      fillIntensity: 2.2,
       directionalPosition: { x: 3, y: 4, z: 4 },
     },
     // Board is 3.6 wide x 4 tall, centered at local (0, 4).
