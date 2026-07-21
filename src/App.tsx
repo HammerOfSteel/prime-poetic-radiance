@@ -15,6 +15,9 @@ import { TransitionOverlay } from './scene/TransitionOverlay';
 import { HUD } from './ui/HUD';
 import { StepBackButton } from './ui/StepBackButton';
 import { BlueprintDebugPanel } from './ui/BlueprintDebugPanel';
+import { PostProcessing } from './scene/PostProcessing';
+import { PostFxSettingsButton } from './ui/PostFxSettingsButton';
+import { PostFxSettingsPanel } from './ui/PostFxSettingsPanel';
 import { useSceneStore } from './state/sceneStore';
 import { useEnvironmentSync } from './state/useEnvironmentSync';
 import { SCENES, type SceneId } from './engine/scenes';
@@ -141,6 +144,7 @@ function App() {
             maxDistance={25}
             maxPolarAngle={Math.PI / 2 - 0.05}
           />
+          <PostProcessing />
         </Canvas>
       </CanvasErrorBoundary>
       <TransitionOverlay progress={overlayProgress} />
@@ -151,6 +155,8 @@ function App() {
         onExit={handleExitProceduralRoom}
       />
       <StepBackButton />
+      <PostFxSettingsButton />
+      <PostFxSettingsPanel />
     </div>
   );
 }
