@@ -107,18 +107,17 @@ export function Lighting() {
   return (
     <>
       <ambientLight ref={ambientRef} intensity={1.4} />
+      {/* No castShadow here: with the light's tunable position moved close
+       * to large rooms (e.g. tavern's `directionalPosition: {x:3,y:4,z:4}`)
+       * the fixed ±10 orthographic shadow-camera frustum couldn't cover
+       * receiveShadow meshes near its edges (the tavern bench, back wall),
+       * which rendered as solid black instead of merely unshadowed.
+       * Ambient occlusion from the global post-processing pass already
+       * provides contact shadowing, so directional shadows were dropped
+       * rather than re-tuned per scene. */}
       <directionalLight
         ref={directionalRef}
         position={[5, 10, 5]}
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-        shadow-camera-near={0.5}
-        shadow-camera-far={25}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-        shadow-bias={-0.001}
       />
       <pointLight ref={fillRef} position={[0, 5, 2]} intensity={0.5} distance={20} />
       <pointLight color="#fff3d6" intensity={3} distance={12} position={[-5, 6, -5.3]} />

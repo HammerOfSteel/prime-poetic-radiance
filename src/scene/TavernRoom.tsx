@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture, createSoftCircleTexture } from './proceduralTextures';
 import { TavernAtmosphere } from './TavernAtmosphere';
@@ -129,17 +128,19 @@ export function TavernRoom() {
         decay={2}
       />
 
-      <RoundedBox
-        args={[10, 1, 3]}
-        radius={0.08}
-        smoothness={4}
-        position={[-4, 0.5, -2]}
-        castShadow
-        receiveShadow
-        data-kind="bench"
-      >
-        <meshToonMaterial color="#8a5a34" gradientMap={gradientMap} map={benchWoodGrain} />
-      </RoundedBox>
+      {/* meshStandardMaterial here, not meshToonMaterial like the rest of the
+       * room: this specific mesh rendered solid black only in the native
+       * Tauri app's WebKit/Metal WebGL renderer (fine in Chromium), even
+       * with identical geometry/texture/gradientMap to the working shelf
+       * plank and barrels below. Shadows, RoundedBox vs boxGeometry, AO,
+       * DOF, and tone-mapping exposure were all ruled out as the cause via
+       * native-app testing; swapping just this mesh off meshToonMaterial
+       * is the confirmed, working fix for whatever WebKit-specific toon
+       * shader issue this large flat mesh was triggering. */}
+      <mesh position={[-4, 0.5, -2]} receiveShadow data-kind="bench">
+        <boxGeometry args={[10, 1, 3]} />
+        <meshStandardMaterial color="#8a5a34" map={benchWoodGrain} />
+      </mesh>
 
       {/* Barrel cluster stacked against the back wall, opposite the hearth */}
       {BARREL_POSITIONS.map((position, index) => (
@@ -158,17 +159,10 @@ export function TavernRoom() {
       ))}
 
       {/* Wall shelf with bottles, mounted on the back wall right of the barrels */}
-      <RoundedBox
-        args={[2, 0.12, 0.5]}
-        radius={0.03}
-        smoothness={4}
-        position={[7, 3.5, -5.3]}
-        castShadow
-        receiveShadow
-        data-kind="shelf-plank"
-      >
+      <mesh position={[7, 3.5, -5.3]} receiveShadow data-kind="shelf-plank">
+        <boxGeometry args={[2, 0.12, 0.5]} />
         <meshToonMaterial color="#6a4527" gradientMap={gradientMap} map={benchWoodGrain} />
-      </RoundedBox>
+      </mesh>
       {SHELF_BOTTLES.map(({ x, height, color }, index) => (
         <mesh key={index} position={[7 + x, 3.56 + height / 2, -5.3]} castShadow data-kind="shelf-bottle">
           <cylinderGeometry args={[0.09, 0.11, height, 10]} />
