@@ -1,13 +1,36 @@
 import { useMemo } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
-import { createGrainTexture, createWoodGrainTexture } from './proceduralTextures';
+import { createGrainTexture, createWoodGrainTexture, createSkyGradientTexture, createSeededRng } from './proceduralTextures';
+import { useSceneStore } from '../state/sceneStore';
+import { LIGHTING_PRESETS } from '../engine/lightingPresets';
+
+const NIGHT_STAR_COUNT = 15;
+const NIGHT_STAR_X_RANGE: [number, number] = [-7.6, -2.4];
+const NIGHT_STAR_Y_RANGE: [number, number] = [4.2, 7.6];
 
 export function Kitchen() {
   const gradientMap = useMemo(() => createToonGradientMap(), []);
   const wallGrain = useMemo(() => createGrainTexture({ repeat: [6, 3] }), []);
   const floorWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [8, 8] }), []);
   const counterWoodGrain = useMemo(() => createWoodGrainTexture({ repeat: [4, 1] }), []);
+
+  const lightingPreset = useSceneStore((state) => state.lightingPreset);
+  const skyTexture = useMemo(() => {
+    const preset = LIGHTING_PRESETS[lightingPreset];
+    return createSkyGradientTexture(preset.fogColor, preset.ambientColor);
+  }, [lightingPreset]);
+
+  const nightStarPositions = useMemo<[number, number, number][]>(() => {
+    const rng = createSeededRng(99);
+    const [minX, maxX] = NIGHT_STAR_X_RANGE;
+    const [minY, maxY] = NIGHT_STAR_Y_RANGE;
+    return Array.from({ length: NIGHT_STAR_COUNT }, () => {
+      const x = minX + rng() * (maxX - minX);
+      const y = minY + rng() * (maxY - minY);
+      return [x, y, -5.35] as [number, number, number];
+    });
+  }, []);
 
   return (
     <>
@@ -28,8 +51,16 @@ export function Kitchen() {
 
       <mesh position={[-5, 6, -5.4]}>
         <planeGeometry args={[6, 4]} />
-        <meshBasicMaterial color="#fff3d6" />
+        <meshBasicMaterial map={skyTexture} />
       </mesh>
+
+      {lightingPreset === 'night' &&
+        nightStarPositions.map((position, index) => (
+          <mesh key={index} position={position} data-kind="night-star">
+            <sphereGeometry args={[0.04, 6, 6]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+        ))}
 
       <RoundedBox args={[12, 3, 3]} radius={0.1} smoothness={4} position={[-4, 1.5, -4]} castShadow receiveShadow>
         <meshToonMaterial color="#c96a3e" gradientMap={gradientMap} map={counterWoodGrain} />
