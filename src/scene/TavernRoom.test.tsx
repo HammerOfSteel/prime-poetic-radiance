@@ -62,4 +62,11 @@ describe('TavernRoom', () => {
     const points = renderer.scene.findAllByType('Points');
     expect(points.length).toBe(2);
   });
+
+  it('renders adventurer busywork props: map table, whetstone/dagger, and coin pouch', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<TavernRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'map-table-top' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'whetstone' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'coin-pouch' }).length).toBe(1);
+  });
 });

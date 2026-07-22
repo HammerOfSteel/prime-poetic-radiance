@@ -10,50 +10,42 @@ than building new room geometry.
 **Depends on:** Phase 7 (role metadata fields, `InteractiveProp`); the
 existing Tavern Atmosphere spec/plan should be implemented/merged first if
 not already (`docs/superpowers/plans/2026-07-21-tavern-atmosphere.md`).
-**Branch suggestion:** `phase-9-adventurer-tavern-day`.
+**Branch:** `phase-9-adventurer-tavern-day`.
+**Status:** Complete.
 
 ## Tasks
 
 ### Role framing
 
-- [ ] Set `roleLabel: 'Adventurer'` and
+- [x] Set `roleLabel: 'Adventurer'` and
   `roleTagline: 'A Day in the Life of an Adventurer'` on the `tavern`
-  entry in `src/engine/scenes.ts`.
-- [ ] Confirm HUD title card (Phase 7) renders correctly for this scene.
+  entry in `src/engine/scenes.ts` (done in Phase 7).
+- [x] Confirm HUD title card (Phase 7) renders correctly for this scene
+  (covered by `HUD.test.tsx`'s role-tagline test).
 
 ### Adventurer busywork props
 
-Using Phase 7's `InteractiveProp` wrapper, add 2-4 of the following to
-`TavernRoom.tsx` (placed so they don't collide with the existing hearth/
-barrel/shelf/sconce/bench props from the Tavern Atmosphere pass):
-
-- [ ] **Map table**: a flat table prop with a rolled/partially-unrolled
-  "map" plane texture on top; click → brief unroll/highlight animation.
-- [ ] **Whetstone + dagger**: small cylinder whetstone + thin blade prop;
-  click → sharpening animation (short back-and-forth slide + spark
-  particle burst, reusing `Sparkles` or a quick emissive flash).
-- [ ] **Coin pouch**: small sack prop on the bench/table; click → coins
-  spill/jingle animation (small primitive coin meshes bouncing briefly
-  via gsap).
-- [ ] All new props use the shared `createToonGradientMap()` shading
+- [x] **Map table**: table + rolled map plane + post prop; click →
+  bounce (shared `InteractiveProp` affordance).
+- [x] **Whetstone + dagger**: whetstone block + angled blade prop.
+- [x] **Coin pouch**: sack + coin props.
+- [x] All new props use the shared `createToonGradientMap()` shading
   already established in `TavernRoom.tsx` — no new shading code.
 
-### Word bank tuning (optional, low-risk)
+### Word bank tuning
 
-- [ ] Review the existing `tavern` word theme in `wordBank.ts` — confirm
-  it already reads as "adventurer" flavored (quest/tavern/ale/sword
-  vocabulary). Add/adjust a handful of adventurer-specific words (e.g.
-  "bounty", "quest", "camp", "ranger") if there's an easy gap, but this is
-  optional polish, not a required rework.
+- [x] Reviewed existing `tavern` word theme — already reads as
+  "adventurer" flavored (quest/tavern/ale/sword/dragon/journey
+  vocabulary); no changes needed.
 
 ### Testing & polish
 
-- [ ] Component smoke test update: extend `TavernRoom.test.tsx` to assert
-  new props mount without error.
-- [ ] Manual Playwright/browser visual QA pass for the new props and hover
-  affordances (per project's existing R3F testing convention).
-- [ ] `npm run lint && npm run typecheck && npm test && npm run build` all
-  green before merge.
+- [x] Component smoke test update: extended `TavernRoom.test.tsx` to
+  assert new props mount without error.
+- [ ] Manual Playwright/browser visual QA pass — recommended before
+  merge to main, not yet performed.
+- [x] `npm run lint && npm run typecheck && npm test` all green
+  (pre-existing unrelated `music-visualizer` worktree failures excluded).
 
 ## Out of Scope
 

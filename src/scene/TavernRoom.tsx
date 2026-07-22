@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { createToonGradientMap } from './toonGradient';
 import { createGrainTexture, createWoodGrainTexture, createSoftCircleTexture } from './proceduralTextures';
 import { TavernAtmosphere } from './TavernAtmosphere';
+import { InteractiveProp } from './InteractiveProp';
 
 const HEARTH_POSITION: [number, number, number] = [-6, 2.5, -4.6];
 const HEARTH_FLAME_COUNT = 3;
@@ -203,6 +204,48 @@ export function TavernRoom() {
           </mesh>
         </group>
       ))}
+
+      {/* Adventurer busywork props: map table, whetstone + dagger, coin pouch */}
+      <InteractiveProp position={[1, 0.55, -2]} baseScale={[1, 1, 1]}>
+        <mesh castShadow receiveShadow data-kind="map-table-top">
+          <cylinderGeometry args={[0.7, 0.7, 0.08, 8]} />
+          <meshToonMaterial color="#6a4527" gradientMap={gradientMap} map={benchWoodGrain} />
+        </mesh>
+        <mesh position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} data-kind="map-scroll">
+          <planeGeometry args={[0.5, 0.35]} />
+          <meshToonMaterial color="#d9c496" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0, 0.4, 0]}>
+          <cylinderGeometry args={[0.08, 0.08, 0.8, 8]} />
+          <meshToonMaterial color="#2b1d14" gradientMap={gradientMap} />
+        </mesh>
+      </InteractiveProp>
+
+      <InteractiveProp position={[-3.2, 1.05, -1.6]} baseScale={[1, 1, 1]}>
+        <mesh castShadow data-kind="whetstone">
+          <boxGeometry args={[0.3, 0.08, 0.12]} />
+          <meshToonMaterial color="#8a8a86" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0.05, 0.08, 0]} rotation={[0, 0, Math.PI / 6]} data-kind="dagger-blade">
+          <boxGeometry args={[0.5, 0.03, 0.05]} />
+          <meshToonMaterial color="#c9c9c9" gradientMap={gradientMap} />
+        </mesh>
+      </InteractiveProp>
+
+      <InteractiveProp position={[0, 1.05, -1.8]} baseScale={[1, 1, 1]}>
+        <mesh castShadow data-kind="coin-pouch">
+          <sphereGeometry args={[0.14, 10, 10]} />
+          <meshToonMaterial color="#7a5230" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0.1, 0.02, 0.08]} data-kind="coin">
+          <cylinderGeometry args={[0.04, 0.04, 0.01, 10]} />
+          <meshToonMaterial color="#d4af37" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[-0.08, 0.02, 0.05]} data-kind="coin">
+          <cylinderGeometry args={[0.04, 0.04, 0.01, 10]} />
+          <meshToonMaterial color="#d4af37" gradientMap={gradientMap} />
+        </mesh>
+      </InteractiveProp>
 
       <TavernAtmosphere hearthPosition={HEARTH_POSITION} />
     </>
