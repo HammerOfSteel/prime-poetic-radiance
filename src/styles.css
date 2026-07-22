@@ -19,6 +19,12 @@ button:active { transform: translateY(1px); }
     color: white;
 }
 
+.role-tagline {
+    font-style: italic;
+    opacity: 0.85;
+    margin: 0.25rem 0 0.75rem;
+}
+
 .step-back-button {
     position: fixed;
     top: 1.5rem;

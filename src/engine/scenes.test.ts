@@ -44,4 +44,13 @@ describe('scenes', () => {
       expect(scene.cameraTarget).toHaveLength(3);
     });
   });
+
+  it('gives every scene a "Day in the Life" role label and tagline', () => {
+    SCENE_IDS.forEach((id) => {
+      const scene = SCENES[id];
+      expect(typeof scene.roleLabel).toBe('string');
+      expect(scene.roleLabel!.length).toBeGreaterThan(0);
+      expect(scene.roleTagline).toContain('A Day in the Life of');
+    });
+  });
 });

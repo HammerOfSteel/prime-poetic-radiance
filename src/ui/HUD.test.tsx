@@ -54,6 +54,13 @@ describe('HUD', () => {
     expect(useSceneStore.getState().activeSceneId).toBe('tavern');
   });
 
+  it('shows the active scene role tagline and updates it on scene switch', async () => {
+    render(<HUD />);
+    expect(screen.getByTestId('role-tagline')).toHaveTextContent('A Day in the Life of a Cook');
+    await userEvent.click(screen.getByRole('button', { name: /tavern noticeboard/i }));
+    expect(screen.getByTestId('role-tagline')).toHaveTextContent('A Day in the Life of an Adventurer');
+  });
+
   it('hides the Auto/Manual toggle and lighting presets when the active scene opts out of environment lighting', async () => {
     render(<HUD />);
     await userEvent.click(screen.getByRole('button', { name: /tavern noticeboard/i }));

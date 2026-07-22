@@ -21,6 +21,13 @@ export interface SceneDefinition {
   cameraZoomedIn: [number, number, number];
   /** OrbitControls target when zoomed in on this scene's board. */
   cameraTarget: [number, number, number];
+  /** Display label shown in the HUD's "Day in the Life" title card, e.g.
+   * "Developer" or "Adventurer". Optional so existing scenes need not be
+   * touched immediately; new "Day in the Life" scenes should always set it. */
+  roleLabel?: string;
+  /** Full tagline shown in the HUD's title card, e.g.
+   * "A Day in the Life of a Developer — Home Office". */
+  roleTagline?: string;
   /** Whether this scene participates in the Phase 3 Auto/Manual lighting system. */
   usesEnvironmentLighting: boolean;
   /** Fixed lighting preset used instead of the environment system when
@@ -64,6 +71,8 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     // difference (~3.45) to match their on-screen framing/scale.
     cameraZoomedIn: [4, 5, 6.95],
     cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Cook',
+    roleTagline: 'A Day in the Life of a Cook',
     usesEnvironmentLighting: true,
     fixedLightingPreset: null,
     // Door is 3.6 wide x 7.8 tall, centered at local (0, 4).
@@ -86,6 +95,8 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     magnetCount: 26,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Adventurer',
+    roleTagline: 'A Day in the Life of an Adventurer',
     usesEnvironmentLighting: false,
     // Brightened aggressively — direct comparison against the actual
     // native app render (not just a browser dev-server preview) showed
@@ -116,6 +127,8 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     magnetCount: 26,
     cameraZoomedIn: [4, 5, 3.5],
     cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Wizard',
+    roleTagline: 'A Day in the Life of a Dungeon-Keeping Wizard',
     usesEnvironmentLighting: true,
     fixedLightingPreset: null,
     // Board is 3.6 wide x 4 tall, centered at local (0, 4).

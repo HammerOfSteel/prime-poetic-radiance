@@ -16,12 +16,18 @@ export function HUD() {
   const environmentMode = useSceneStore((state) => state.environmentMode);
   const setEnvironmentMode = useSceneStore((state) => state.setEnvironmentMode);
   const isAuto = environmentMode === 'auto';
-  const usesEnvironmentLighting = SCENES[activeSceneId].usesEnvironmentLighting;
+  const activeScene = SCENES[activeSceneId];
+  const usesEnvironmentLighting = activeScene.usesEnvironmentLighting;
 
   return (
     <div className="glass-panel interactive-ui hud">
       <h1>Magic Fridge</h1>
       <p>Click a scene to zoom in. Drag words to write poetry.</p>
+      {activeScene.roleTagline && (
+        <p data-testid="role-tagline" className="role-tagline">
+          {activeScene.roleTagline}
+        </p>
+      )}
       <div>
         {SCENE_IDS.map((id) => (
           <button

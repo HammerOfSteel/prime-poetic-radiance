@@ -1,8 +1,10 @@
 export type WordCategory = 'noun' | 'verb' | 'adj' | 'adverb' | 'prep';
 
 /** Scene themes words can be weighted for. Phase 4a added 'tavern'; Phase 4b
- * adds 'dungeon' alongside the original Phase 1 'kitchen' theme. */
-export type WordTheme = 'kitchen' | 'tavern' | 'dungeon';
+ * adds 'dungeon' alongside the original Phase 1 'kitchen' theme. Phase 7
+ * adds the 'developer' theme placeholder (content added in Phase 8's
+ * Developer "Day in the Life" rooms). */
+export type WordTheme = 'kitchen' | 'tavern' | 'dungeon' | 'developer';
 
 export interface WordEntry {
   word: string;
