@@ -8,6 +8,8 @@ import { TavernRoom } from './scene/TavernRoom';
 import { TavernNoticeboard } from './scene/TavernNoticeboard';
 import { DungeonRoom } from './scene/DungeonRoom';
 import { DungeonTablet } from './scene/DungeonTablet';
+import { DeveloperHomeOffice } from './scene/DeveloperHomeOffice';
+import { DeveloperHomeOfficeBoard } from './scene/DeveloperHomeOfficeBoard';
 import { ProceduralRoom } from './scene/ProceduralRoom';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
@@ -33,6 +35,7 @@ const SCENE_COMPONENTS: Record<SceneId, { Room: () => React.JSX.Element; Board: 
   kitchen: { Room: Kitchen, Board: Fridge },
   tavern: { Room: TavernRoom, Board: TavernNoticeboard },
   dungeon: { Room: DungeonRoom, Board: DungeonTablet },
+  developerHomeOffice: { Room: DeveloperHomeOffice, Board: DeveloperHomeOfficeBoard },
 };
 
 function CameraRig({

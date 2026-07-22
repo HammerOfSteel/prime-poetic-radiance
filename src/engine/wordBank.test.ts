@@ -79,4 +79,12 @@ describe('wordBank', () => {
     expect(getThemeWeight('sword', 'tavern')).toBe(3);
     expect(getThemeWeight('sword', 'dungeon')).toBeGreaterThan(1);
   });
+
+  it('has developer-themed words with a developer weight greater than their default weight', () => {
+    const developerWords = ['code', 'bug', 'terminal', 'commit', 'keyboard', 'monitor', 'standup', 'deadline', 'server', 'cursor', 'duck', 'debug', 'deploy', 'refactor', 'compile'];
+    developerWords.forEach((word) => {
+      expect(WORDS).toContain(word);
+      expect(getThemeWeight(word, 'developer')).toBeGreaterThan(1);
+    });
+  });
 });

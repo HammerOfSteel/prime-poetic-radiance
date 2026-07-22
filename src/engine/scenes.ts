@@ -1,7 +1,7 @@
 import type { WordTheme } from './wordBank';
 import type { LightingPreset } from './lightingPresets';
 
-export type SceneId = 'kitchen' | 'tavern' | 'dungeon';
+export type SceneId = 'kitchen' | 'tavern' | 'dungeon' | 'developerHomeOffice';
 
 export interface SceneDefinition {
   id: SceneId;
@@ -42,7 +42,7 @@ export interface SceneDefinition {
   magnetBoardBounds: { x: [number, number]; y: [number, number] };
 }
 
-export const SCENE_IDS: SceneId[] = ['kitchen', 'tavern', 'dungeon'];
+export const SCENE_IDS: SceneId[] = ['kitchen', 'tavern', 'dungeon', 'developerHomeOffice'];
 
 /**
  * World-space position of each scene's board/door group (Fridge,
@@ -133,5 +133,24 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     fixedLightingPreset: null,
     // Board is 3.6 wide x 4 tall, centered at local (0, 4).
     magnetBoardBounds: { x: [-1.6, 1.6], y: [2.3, 5.7] },
+  },
+  developerHomeOffice: {
+    id: 'developerHomeOffice',
+    label: 'Developer Home Office',
+    wordTheme: 'developer',
+    // Corkboard mounted on the office wall above the desk; front face at
+    // local z ~1.65, mirroring the fridge door's framing (see Fridge.tsx).
+    magnetSurfaceZ: 1.75,
+    magnetCount: 28,
+    cameraZoomedIn: [4, 5, 6.95],
+    cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Developer',
+    roleTagline: 'A Day in the Life of a Developer — Home Office',
+    // A cozy home office plausibly tracks real time of day: morning light
+    // through the window, warm lamp glow in the evening.
+    usesEnvironmentLighting: true,
+    fixedLightingPreset: null,
+    // Corkboard is 3.2 wide x 3.6 tall, centered at local (0, 4).
+    magnetBoardBounds: { x: [-1.4, 1.4], y: [2.4, 5.6] },
   },
 };

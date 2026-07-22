@@ -117,6 +117,18 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'crumbling', category: 'noun', themeWeights: { dungeon: 3 } },
   { word: 'stone', category: 'noun', themeWeights: { dungeon: 3 } },
   { word: 'dagger', category: 'noun', themeWeights: { dungeon: 3 } },
+  { word: 'code', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'bug', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'terminal', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'commit', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'keyboard', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'monitor', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'standup', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'deadline', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'server', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'cursor', category: 'noun', themeWeights: { developer: 3 } },
+  { word: 'branch', category: 'noun', themeWeights: { developer: 2 } },
+  { word: 'duck', category: 'noun', themeWeights: { developer: 3 } },
 
   // --- verbs ---
   { word: 'love', category: 'verb' },
@@ -159,6 +171,11 @@ export const WORD_ENTRIES: WordEntry[] = [
   { word: 'betray', category: 'verb' },
   { word: 'forgive', category: 'verb' },
   { word: 'listen', category: 'verb' },
+  { word: 'debug', category: 'verb', themeWeights: { developer: 3 } },
+  { word: 'deploy', category: 'verb', themeWeights: { developer: 3 } },
+  { word: 'refactor', category: 'verb', themeWeights: { developer: 3 } },
+  { word: 'compile', category: 'verb', themeWeights: { developer: 3 } },
+  { word: 'ship', category: 'verb', themeWeights: { developer: 2 } },
 
   // --- adjectives ---
   { word: 'hot', category: 'adj' },

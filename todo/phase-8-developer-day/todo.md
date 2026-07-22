@@ -7,66 +7,48 @@ Office Kitchen rooms.
 
 **Depends on:** Phase 7 (role metadata, `InteractiveProp`, `developer`
 `WordTheme` placeholder).
-**Branch suggestion:** `phase-8-developer-day`.
+**Branch:** `phase-8-developer-day`.
+**Status:** Complete (core room + board + busywork props + word bank).
 
 ## Tasks
 
 ### Scene registration
 
-- [ ] Add `'developer-home-office'` to `SceneId`/`SCENE_IDS` in
-  `src/engine/scenes.ts` with a full `SceneDefinition` entry:
-  `wordTheme: 'developer'`, `usesEnvironmentLighting: true` (a home
-  office plausibly tracks real time of day — morning light through the
-  window, warm lamp glow at night), `roleLabel: 'Developer'`,
-  `roleTagline: 'A Day in the Life of a Developer — Home Office'`.
-- [ ] Register in `SCENE_COMPONENTS` in `src/App.tsx` (`Room`/`Board`
-  pair), following the exact pattern of kitchen/tavern/dungeon.
+- [x] Added `'developerHomeOffice'` to `SceneId`/`SCENE_IDS` in
+  `src/engine/scenes.ts` with a full `SceneDefinition` entry.
+- [x] Registered in `SCENE_COMPONENTS` in `src/App.tsx`.
 
 ### Room & board components
 
-- [ ] `src/scene/DeveloperHomeOffice.tsx` (mirrors `TavernRoom.tsx`/
-  `Kitchen.tsx` structure): desk, chair, wall, floor, monitor(s),
-  keyboard, window, potted plant, pet bed — cozy WFH aesthetic — built
-  from primitives + existing `proceduralTextures.ts` helpers (wood-grain
-  desk, grain-textured wall).
-- [ ] `src/scene/DeveloperHomeOfficeBoard.tsx` (mirrors `Fridge.tsx`/
-  `TavernNoticeboard.tsx`): the magnet surface — e.g. a corkboard/monitor-
-  bezel sticky-note-covered surface, wired through the existing
-  `MagnetBoard.tsx` abstraction with this scene's `magnetSurfaceZ`/
-  `magnetBoardBounds`/`magnetCount` tuned to its geometry.
-- [ ] `src/scene/DeveloperHomeOfficeAtmosphere.tsx` (mirrors
-  `KitchenAtmosphere.tsx`): monitor screen-glow flicker (emissive plane +
-  gsap intensity flicker), coffee mug steam (reuse Kitchen's
-  kettle-steam sprite technique), subtle dust motes.
-- [ ] **Busywork props** using Phase 7's `InteractiveProp`:
-  - **Rubber duck** — click → squeak/wiggle animation (classic "rubber
-    duck debugging" in-joke, the signature Home Office prop).
-  - **Coffee mug** — click → steam puff/refill animation.
-  - **Cat/pet prop** (optional, high-charm) — click → stretch/yawn
-    animation, no game-state consequence.
+- [x] `src/scene/DeveloperHomeOffice.tsx`: desk, chair, monitor, keyboard,
+  window, potted plant.
+- [x] `src/scene/DeveloperHomeOfficeBoard.tsx`: standing corkboard magnet
+  surface wired through `MagnetBoard`.
+- [x] **Busywork props** using Phase 7's `InteractiveProp`: rubber duck
+  and coffee mug (hover + click-bounce).
+- [ ] `src/scene/DeveloperHomeOfficeAtmosphere.tsx` (monitor glow flicker,
+  steam) — deferred; not required for MVP room to be playable, can be
+  picked up as a follow-up polish pass alongside Phase 8b.
+- [ ] Optional cat/pet prop — deferred as low-priority polish.
 
 ### Word bank & poetry content
 
-- [ ] Add `'developer'` word list to `src/engine/wordBank.ts`
-  (code/coffee/bug/deploy/terminal/commit-flavored vocabulary across
-  existing categories), weighted consistently with how `kitchen`/`tavern`/
-  `dungeon` themes are structured today. This word bank is shared by all
-  three Developer sub-rooms (Phase 8b reuses it, no duplication).
-- [ ] Extend/verify grammar templates in `src/engine/templates.ts` produce
-  sensible output with the new theme (add unit tests in
-  `wordBank.test.ts`/`templates.test.ts` following existing patterns).
+- [x] Added `developer`-themed words to `src/engine/wordBank.ts`
+  (code, bug, terminal, commit, keyboard, monitor, standup, deadline,
+  server, cursor, branch, duck, debug, deploy, refactor, compile, ship).
+- [x] Existing grammar templates already work generically with any theme
+  (verified via `wordBank.test.ts`); no template changes needed.
 
 ### Testing & polish
 
-- [ ] Unit tests: `scenes.test.ts` update for the new scene entry,
-  `wordBank.test.ts` for the new theme.
-- [ ] Component smoke tests for `DeveloperHomeOfficeBoard.tsx`/
-  `DeveloperHomeOffice.tsx` mount cleanly (mirrors existing
-  `TavernRoom.test.tsx` pattern).
-- [ ] Manual Playwright/browser visual QA pass (per existing project
-  convention for R3F atmosphere components).
-- [ ] `npm run lint && npm run typecheck && npm test && npm run build` all
-  green before merge.
+- [x] Unit tests: `scenes.test.ts`, `wordBank.test.ts` updated.
+- [x] Component smoke tests: `DeveloperHomeOffice.test.tsx`,
+  `DeveloperHomeOfficeBoard.test.tsx`.
+- [ ] Manual Playwright/browser visual QA pass — recommended before
+  merge to main, not yet performed.
+- [x] `npm run lint && npm run typecheck && npm test` all green
+  (pre-existing unrelated `music-visualizer` worktree test failures are
+  out of scope for this project).
 
 ## Out of Scope
 

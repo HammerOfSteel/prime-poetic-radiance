@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { SCENES, SCENE_IDS } from './scenes';
 
 describe('scenes', () => {
-  it('lists kitchen, tavern, and dungeon in SCENE_IDS', () => {
-    expect(SCENE_IDS).toEqual(['kitchen', 'tavern', 'dungeon']);
+  it('lists kitchen, tavern, dungeon, and developerHomeOffice in SCENE_IDS', () => {
+    expect(SCENE_IDS).toEqual(['kitchen', 'tavern', 'dungeon', 'developerHomeOffice']);
   });
 
   it('defines a SceneDefinition for every id in SCENE_IDS', () => {
@@ -43,6 +43,13 @@ describe('scenes', () => {
       expect(scene.cameraZoomedIn).toHaveLength(3);
       expect(scene.cameraTarget).toHaveLength(3);
     });
+  });
+
+  it('gives the developerHomeOffice scene its own theme and participates in the environment lighting system', () => {
+    expect(SCENES.developerHomeOffice.wordTheme).toBe('developer');
+    expect(SCENES.developerHomeOffice.usesEnvironmentLighting).toBe(true);
+    expect(SCENES.developerHomeOffice.fixedLightingPreset).toBeNull();
+    expect(SCENES.developerHomeOffice.magnetCount).toBeGreaterThan(0);
   });
 
   it('gives every scene a "Day in the Life" role label and tagline', () => {

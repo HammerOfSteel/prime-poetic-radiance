@@ -15,7 +15,7 @@ describe('HUD', () => {
     expect(screen.getByRole('button', { name: /auto/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /morning/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /day/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /eve/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^🌇 eve$/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /night/i })).toBeInTheDocument();
   });
 
