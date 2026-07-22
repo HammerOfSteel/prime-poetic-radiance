@@ -21,7 +21,7 @@ export function HUD() {
 
   return (
     <div className="glass-panel interactive-ui hud">
-      <h1>Magic Fridge</h1>
+      <h1>{activeScene.label}</h1>
       <p>Click a scene to zoom in. Drag words to write poetry.</p>
       {activeScene.roleTagline && (
         <p data-testid="role-tagline" className="role-tagline">
