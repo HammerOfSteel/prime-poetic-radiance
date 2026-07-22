@@ -112,4 +112,29 @@ describe('useSceneStore', () => {
     useSceneStore.getState().setDraggedMagnetId(null);
     expect(useSceneStore.getState().draggedMagnetId).toBeNull();
   });
+
+  it('increments the cubicle meeting tally from zero', () => {
+    expect(useSceneStore.getState().cubicleMeetingTally).toBe(0);
+    useSceneStore.getState().incrementCubicleMeetingTally();
+    useSceneStore.getState().incrementCubicleMeetingTally();
+    expect(useSceneStore.getState().cubicleMeetingTally).toBe(2);
+  });
+
+  it('advances and closes the cubicle standup vignette line index', () => {
+    expect(useSceneStore.getState().cubicleStandupLineIndex).toBeNull();
+    useSceneStore.getState().advanceCubicleStandupLine();
+    expect(useSceneStore.getState().cubicleStandupLineIndex).toBe(0);
+    useSceneStore.getState().advanceCubicleStandupLine();
+    expect(useSceneStore.getState().cubicleStandupLineIndex).toBe(1);
+    useSceneStore.getState().closeCubicleStandup();
+    expect(useSceneStore.getState().cubicleStandupLineIndex).toBeNull();
+  });
+
+  it('toggles the cubicle PR-review overlay', () => {
+    expect(useSceneStore.getState().cubiclePrReviewOpen).toBe(false);
+    useSceneStore.getState().setCubiclePrReviewOpen(true);
+    expect(useSceneStore.getState().cubiclePrReviewOpen).toBe(true);
+    useSceneStore.getState().setCubiclePrReviewOpen(false);
+    expect(useSceneStore.getState().cubiclePrReviewOpen).toBe(false);
+  });
 });

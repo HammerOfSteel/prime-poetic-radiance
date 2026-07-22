@@ -29,6 +29,17 @@ export interface SceneState {
    * slam, per scene (empty if the board hasn't been slammed yet, or after
    * a reset/regenerate). See `SlamButton.tsx`. */
   slamActiveWordsBySceneId: Partial<Record<SceneId, string[]>>;
+  /** Developer Cubicle set-piece interaction state (Phase 8b): a pure
+   * visual "meetings today" tally gag, the current stand-up vignette
+   * line index, and whether the mock PR-review overlay is open. None of
+   * this persists or has any gameplay consequence — pure busywork juice. */
+  cubicleMeetingTally: number;
+  cubicleStandupLineIndex: number | null;
+  cubiclePrReviewOpen: boolean;
+  incrementCubicleMeetingTally: () => void;
+  advanceCubicleStandupLine: () => void;
+  closeCubicleStandup: () => void;
+  setCubiclePrReviewOpen: (open: boolean) => void;
   setLightingPreset: (name: LightingPresetName) => void;
   setEnvironmentMode: (mode: EnvironmentMode) => void;
   applyEnvironmentSnapshot: (snapshot: EnvironmentSnapshot) => void;
@@ -59,6 +70,16 @@ export const useSceneStore = create<SceneState>((set, get) => ({
   magnetLayoutBySceneId: { kitchen: initialKitchenLayout },
   homeLayoutBySceneId: { kitchen: initialKitchenLayout },
   slamActiveWordsBySceneId: {},
+  cubicleMeetingTally: 0,
+  cubicleStandupLineIndex: null,
+  cubiclePrReviewOpen: false,
+  incrementCubicleMeetingTally: () => set((state) => ({ cubicleMeetingTally: state.cubicleMeetingTally + 1 })),
+  advanceCubicleStandupLine: () =>
+    set((state) => ({
+      cubicleStandupLineIndex: state.cubicleStandupLineIndex === null ? 0 : state.cubicleStandupLineIndex + 1,
+    })),
+  closeCubicleStandup: () => set({ cubicleStandupLineIndex: null }),
+  setCubiclePrReviewOpen: (open) => set({ cubiclePrReviewOpen: open }),
   setLightingPreset: (name) => set({ lightingPreset: name, environmentMode: 'manual' }),
   setEnvironmentMode: (mode) => set({ environmentMode: mode }),
   applyEnvironmentSnapshot: (snapshot) => {

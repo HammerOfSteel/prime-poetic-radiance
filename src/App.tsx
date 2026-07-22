@@ -10,6 +10,11 @@ import { DungeonRoom } from './scene/DungeonRoom';
 import { DungeonTablet } from './scene/DungeonTablet';
 import { DeveloperHomeOffice } from './scene/DeveloperHomeOffice';
 import { DeveloperHomeOfficeBoard } from './scene/DeveloperHomeOfficeBoard';
+import { DeveloperCubicle } from './scene/DeveloperCubicle';
+import { DeveloperCubicleBoard } from './scene/DeveloperCubicleBoard';
+import { DeveloperOfficeKitchen } from './scene/DeveloperOfficeKitchen';
+import { DeveloperOfficeKitchenBoard } from './scene/DeveloperOfficeKitchenBoard';
+import { CubicleOverlays } from './ui/CubicleOverlays';
 import { ProceduralRoom } from './scene/ProceduralRoom';
 import { Lighting } from './scene/Lighting';
 import { CanvasErrorBoundary } from './scene/CanvasErrorBoundary';
@@ -36,6 +41,8 @@ const SCENE_COMPONENTS: Record<SceneId, { Room: () => React.JSX.Element; Board: 
   tavern: { Room: TavernRoom, Board: TavernNoticeboard },
   dungeon: { Room: DungeonRoom, Board: DungeonTablet },
   developerHomeOffice: { Room: DeveloperHomeOffice, Board: DeveloperHomeOfficeBoard },
+  developerCubicle: { Room: DeveloperCubicle, Board: DeveloperCubicleBoard },
+  developerOfficeKitchen: { Room: DeveloperOfficeKitchen, Board: DeveloperOfficeKitchenBoard },
 };
 
 function CameraRig({
@@ -152,6 +159,7 @@ function App() {
       </CanvasErrorBoundary>
       <TransitionOverlay progress={overlayProgress} />
       {proceduralBlueprint === null && <HUD />}
+      {proceduralBlueprint === null && <CubicleOverlays />}
       <BlueprintDebugPanel
         activeSeed={proceduralBlueprint?.seed ?? null}
         onGenerate={handleGenerateProceduralRoom}

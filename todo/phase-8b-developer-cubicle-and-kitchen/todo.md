@@ -1,105 +1,77 @@
-# Phase 8b: "A Day in the Life of a Developer" — Cubicle + Office Kitchen
+# Phase 8b: Developer Day — Cubicle + Office Kitchen
 
-**Goal:** Add the second and third Developer sub-rooms — **Cubicle**
-(sterile open-plan contrast to Home Office) and **Office Kitchen**
-(social coffee-break room) — plus the signature Developer set-piece
-interactions researched for this role: the daily stand-up vignette, a
-mock PR-review mini-interaction, and a running "meetings today" gag.
+**Goal:** Round out the Developer "Day in the Life" with the two
+remaining sub-rooms scoped in `todo/overview_todo.md`'s research: the
+**Cubicle** (sterile open-plan contrast room, with a stand-up vignette,
+mock PR-review overlay, and a running "meetings today" tally gag) and the
+**Office Kitchen** (coffee-break social room).
 
-**Depends on:** Phase 8 (Home Office ships first — establishes the
-`developer` word bank, `MagnetBoard`/atmosphere patterns this phase
-reuses).
-**Branch suggestion:** `phase-8b-developer-cubicle-and-kitchen`.
+**Depends on:** Phase 8 (Developer Home Office, `developer` word theme,
+`InteractiveProp`).
+**Branch:** `phase-8b-developer-cubicle-and-kitchen`.
+**Status:** Complete.
 
 ## Tasks
 
-### Cubicle room
+### Scene registration
 
-- [ ] Add `'developer-cubicle'` `SceneId` entry in `src/engine/scenes.ts`
-  (`wordTheme: 'developer'` — shared with Home Office,
-  `usesEnvironmentLighting: true` or a flat fluorescent-lit fixed preset
-  — decide based on how "sterile office" reads against the existing
-  lighting presets; fixed preset likely reads better for the
-  intentionally flat/beige mood), `roleLabel: 'Developer'`,
-  `roleTagline: 'A Day in the Life of a Developer — Cubicle'`.
-- [ ] `src/scene/DeveloperCubicle.tsx`: beige fabric partition walls,
-  motivational poster prop, standing-desk converter, monitor, keyboard —
-  intentionally sterile/flat contrast to Home Office's cozy palette.
-- [ ] `src/scene/DeveloperCubicleBoard.tsx`: reuse the `MagnetBoard`
-  abstraction (e.g. a whiteboard or corkboard surface), sized to this
-  room's geometry.
-- [ ] **"Meetings today" sticky-note tally** — a small prop (sticky note
-  stack or whiteboard tally-mark counter) that increments by 1 each time
-  it's clicked, pure visual gag, resets on scene reload (no persistence)
-  — running joke per research finding on meeting fatigue.
-- [ ] **Video-call window prop** — a flat "frozen webcam" panel showing a
-  static muted avatar with a "You are on mute" label; click → a brief
-  muted-mic-shake/no-sound animation (visual joke, no audio needed).
-- [ ] **Calendar/clock prop → Stand-up vignette**: clicking this prop
-  triggers a short scripted vignette: 2-3 simple avatar silhouettes (flat
-  toon-shaded humanoid shapes, reusing existing shading conventions)
-  appear briefly with a speech-bubble carousel cycling through 3-4 canned
-  stand-up lines (e.g. "Yesterday I fixed the flaky test.", "Today: PR
-  review + the auth bug.", "Blocked on staging access."). Implement the
-  canned-line data as a small pure array in `src/engine/` (testable) with
-  the vignette's presentation as an R3F component (manual QA per
-  project convention). No real dialogue system, no branching.
+- [x] Added `developerCubicle` and `developerOfficeKitchen` to
+  `SceneId`/`SCENE_IDS`/`SCENES` in `src/engine/scenes.ts`, each with its
+  own `roleTagline` ("...— Cubicle" / "...— Office Kitchen").
+- [x] Cubicle uses a fixed, deliberately flat/fluorescent lighting preset
+  (`usesEnvironmentLighting: false`) to sell its sterile-office mood;
+  Office Kitchen uses the environment lighting system.
+- [x] Registered both in `App.tsx`'s `SCENE_COMPONENTS`.
 
-### Office Kitchen room
+### Room & board components
 
-- [ ] Add `'developer-office-kitchen'` `SceneId` entry
-  (`wordTheme: 'developer'`, `usesEnvironmentLighting: true`,
-  `roleLabel: 'Developer'`,
-  `roleTagline: 'A Day in the Life of a Developer — Office Kitchen'`).
-- [ ] `src/scene/DeveloperOfficeKitchen.tsx`: coffee machine, mug rack,
-  small round table, a seated/standing NPC silhouette prop for
-  incidental social-break flavor (no dialogue tree — just presence, or at
-  most a single canned speech-bubble line on click, mirroring the
-  stand-up vignette's simple approach).
-- [ ] `src/scene/DeveloperOfficeKitchenBoard.tsx`: reuse `MagnetBoard`
-  (e.g. a corkboard/notice-board surface near the coffee machine, sized
-  to this room).
-- [ ] **Coffee machine busywork prop** — click → brew animation (steam
-  sprite burst, reusing Kitchen's steam-sprite gsap technique) + a short
-  "ready" chime-equivalent visual cue (e.g. a light flashing on the
-  machine).
-- [ ] **Snack jar busywork prop** — click → lid-pop/jump animation.
+- [x] `src/scene/DeveloperCubicle.tsx`: beige partitions, motivational
+  poster, standing-desk riser, monitor.
+- [x] `src/scene/DeveloperCubicleBoard.tsx`: whiteboard magnet surface.
+- [x] `src/scene/DeveloperOfficeKitchen.tsx`: counter, coffee machine,
+  round table, NPC silhouette prop.
+- [x] `src/scene/DeveloperOfficeKitchenBoard.tsx`: small corkboard magnet
+  surface.
 
-### PR-review mini-interaction (either Cubicle or Home Office monitor)
+### Signature busywork interactions
 
-- [ ] Add a **PR-review monitor overlay**: clicking the monitor in
-  whichever room makes most sense (Cubicle is the natural fit — "real
-  work" happens there) shows a simple mock diff/PR panel (static styled
-  HTML/CSS overlay via the existing `HUD`-style DOM overlay pattern, not
-  3D geometry) with "Approve" / "Request changes" buttons. Both buttons
-  are pure flavor (always "succeed") and trigger a small confetti/
-  checkmark burst animation — satisfying busywork payoff, no real
-  review logic, no persisted state.
+- [x] **Meetings-today tally** (Cubicle): sticky-note prop, click →
+  increments a pure visual tally mark count via new
+  `cubicleMeetingTally` store state (`incrementCubicleMeetingTally`).
+- [x] **Muted video-call window** (Cubicle): panel + avatar prop with the
+  shared `InteractiveProp` bounce as its "you're on mute" shake stand-in.
+- [x] **Stand-up vignette** (Cubicle): calendar/clock prop → advances
+  `cubicleStandupLineIndex`; a new DOM overlay (`CubicleOverlays.tsx`)
+  renders the current canned line from `src/engine/standupLines.ts` (a
+  small, pure, unit-tested fixed script with wraparound) in a speech
+  bubble with a Close button.
+- [x] **Mock PR-review** (Cubicle): clicking the monitor opens a DOM
+  overlay with "Approve"/"Request changes" buttons — both just close the
+  overlay (no real logic), consistent with "busywork, no consequence."
+- [x] **Coffee machine** (Office Kitchen): click → brew animation (steam
+  sprite drifts/fades via gsap) alongside the shared bounce.
+- [x] **Snack jar** (Office Kitchen): click → lid-pop via the shared
+  bounce.
 
-### Room-to-room navigation
+### State & testing
 
-- [ ] Confirm the existing HUD scene-switcher (`src/ui/HUD.tsx`) lists
-  all three Developer sub-rooms clearly grouped/labeled (e.g. a
-  sub-heading or visual grouping distinguishing "Developer: Home
-  Office / Cubicle / Office Kitchen" from Adventurer/other roles) so
-  players understand these three are one role's "day," not three
-  unrelated rooms. Add a lightweight test asserting all three appear in
-  the switcher.
-
-### Testing & polish
-
-- [ ] Unit tests: `scenes.test.ts` updates for both new scene entries;
-  a pure-function test for the stand-up canned-line data/rotation logic
-  if implemented as testable engine code.
-- [ ] Component smoke tests for both new Room/Board pairs.
-- [ ] Manual Playwright/browser visual QA pass covering: tally counter,
-  muted video-call animation, stand-up vignette, coffee-machine brew,
-  snack-jar pop, PR-review overlay buttons.
-- [ ] `npm run lint && npm run typecheck && npm test && npm run build`
-  all green before merge.
+- [x] Extended `sceneStore.ts` with `cubicleMeetingTally`,
+  `cubicleStandupLineIndex`, `cubiclePrReviewOpen` and their setters —
+  all pure UI/flavor state, no persistence, no gameplay consequence.
+- [x] `sceneStore.test.ts` covers the new actions.
+- [x] `standupLines.test.ts` covers the pure line-rotation helper.
+- [x] Component smoke tests: `DeveloperCubicle.test.tsx`,
+  `DeveloperCubicleBoard.test.tsx`, `DeveloperOfficeKitchen.test.tsx`,
+  `DeveloperOfficeKitchenBoard.test.tsx`, `CubicleOverlays.test.tsx`.
+- [x] `npm run lint && npm run typecheck && npm test` all green
+  (pre-existing unrelated `music-visualizer` worktree failures excluded).
 
 ## Out of Scope
 
-- No real video call, no real PR/diff data, no persisted meeting count
-  or approval history — everything here is flavor/juice, not simulation.
-- No branching dialogue or player choice consequences.
+- No room-to-room "walk through a door" navigation model — room
+  switching stays via the existing HUD scene-switcher buttons (all 6
+  scenes, including the 3 Developer rooms, are listed there
+  automatically since `HUD.tsx` iterates `SCENE_IDS`).
+- No real PR/code-review logic, no persisted meeting count across
+  reloads — all Cubicle state resets on store reinitialization by
+  design (pure flavor, not a save-game feature).

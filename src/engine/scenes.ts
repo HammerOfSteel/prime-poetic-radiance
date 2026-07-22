@@ -1,7 +1,13 @@
 import type { WordTheme } from './wordBank';
 import type { LightingPreset } from './lightingPresets';
 
-export type SceneId = 'kitchen' | 'tavern' | 'dungeon' | 'developerHomeOffice';
+export type SceneId =
+  | 'kitchen'
+  | 'tavern'
+  | 'dungeon'
+  | 'developerHomeOffice'
+  | 'developerCubicle'
+  | 'developerOfficeKitchen';
 
 export interface SceneDefinition {
   id: SceneId;
@@ -42,7 +48,14 @@ export interface SceneDefinition {
   magnetBoardBounds: { x: [number, number]; y: [number, number] };
 }
 
-export const SCENE_IDS: SceneId[] = ['kitchen', 'tavern', 'dungeon', 'developerHomeOffice'];
+export const SCENE_IDS: SceneId[] = [
+  'kitchen',
+  'tavern',
+  'dungeon',
+  'developerHomeOffice',
+  'developerCubicle',
+  'developerOfficeKitchen',
+];
 
 /**
  * World-space position of each scene's board/door group (Fridge,
@@ -152,5 +165,47 @@ export const SCENES: Record<SceneId, SceneDefinition> = {
     fixedLightingPreset: null,
     // Corkboard is 3.2 wide x 3.6 tall, centered at local (0, 4).
     magnetBoardBounds: { x: [-1.4, 1.4], y: [2.4, 5.6] },
+  },
+  developerCubicle: {
+    id: 'developerCubicle',
+    label: 'Developer Cubicle',
+    wordTheme: 'developer',
+    magnetSurfaceZ: 1.75,
+    magnetCount: 28,
+    cameraZoomedIn: [4, 5, 6.95],
+    cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Developer',
+    roleTagline: 'A Day in the Life of a Developer — Cubicle',
+    // Sterile open-plan office lighting is deliberately flat/fluorescent,
+    // not tied to the real-world day/night cycle — a fixed preset reads
+    // better for this room's intentionally beige/flat mood.
+    usesEnvironmentLighting: false,
+    fixedLightingPreset: {
+      ambientColor: '#e8e8e0',
+      directionalColor: '#f5f5ef',
+      fillColor: '#dcdcd4',
+      fogColor: '#c8c8c0',
+      directionalIntensity: 3.5,
+      fillIntensity: 2.5,
+      directionalPosition: { x: 2, y: 6, z: 3 },
+    },
+    // Corkboard is 3.2 wide x 3.6 tall, centered at local (0, 4).
+    magnetBoardBounds: { x: [-1.4, 1.4], y: [2.4, 5.6] },
+  },
+  developerOfficeKitchen: {
+    id: 'developerOfficeKitchen',
+    label: 'Office Kitchen',
+    wordTheme: 'developer',
+    magnetSurfaceZ: 1.75,
+    magnetCount: 24,
+    cameraZoomedIn: [4, 5, 6.95],
+    cameraTarget: [4, 5, -1.85],
+    roleLabel: 'Developer',
+    roleTagline: 'A Day in the Life of a Developer — Office Kitchen',
+    usesEnvironmentLighting: true,
+    fixedLightingPreset: null,
+    // Smaller corkboard near the coffee machine: 2.8 wide x 3.2 tall,
+    // centered at local (0, 4).
+    magnetBoardBounds: { x: [-1.2, 1.2], y: [2.6, 5.4] },
   },
 };

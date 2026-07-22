@@ -2,8 +2,15 @@ import { describe, expect, it } from 'vitest';
 import { SCENES, SCENE_IDS } from './scenes';
 
 describe('scenes', () => {
-  it('lists kitchen, tavern, dungeon, and developerHomeOffice in SCENE_IDS', () => {
-    expect(SCENE_IDS).toEqual(['kitchen', 'tavern', 'dungeon', 'developerHomeOffice']);
+  it('lists all six scenes in SCENE_IDS', () => {
+    expect(SCENE_IDS).toEqual([
+      'kitchen',
+      'tavern',
+      'dungeon',
+      'developerHomeOffice',
+      'developerCubicle',
+      'developerOfficeKitchen',
+    ]);
   });
 
   it('defines a SceneDefinition for every id in SCENE_IDS', () => {
@@ -50,6 +57,20 @@ describe('scenes', () => {
     expect(SCENES.developerHomeOffice.usesEnvironmentLighting).toBe(true);
     expect(SCENES.developerHomeOffice.fixedLightingPreset).toBeNull();
     expect(SCENES.developerHomeOffice.magnetCount).toBeGreaterThan(0);
+  });
+
+  it('gives the developerCubicle scene a fixed lighting preset and does not participate in environment lighting', () => {
+    expect(SCENES.developerCubicle.wordTheme).toBe('developer');
+    expect(SCENES.developerCubicle.usesEnvironmentLighting).toBe(false);
+    expect(SCENES.developerCubicle.fixedLightingPreset).not.toBeNull();
+    expect(SCENES.developerCubicle.magnetCount).toBeGreaterThan(0);
+  });
+
+  it('gives the developerOfficeKitchen scene its own theme and participates in environment lighting', () => {
+    expect(SCENES.developerOfficeKitchen.wordTheme).toBe('developer');
+    expect(SCENES.developerOfficeKitchen.usesEnvironmentLighting).toBe(true);
+    expect(SCENES.developerOfficeKitchen.fixedLightingPreset).toBeNull();
+    expect(SCENES.developerOfficeKitchen.magnetCount).toBeGreaterThan(0);
   });
 
   it('gives every scene a "Day in the Life" role label and tagline', () => {
