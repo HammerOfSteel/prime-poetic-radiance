@@ -200,6 +200,6 @@ passing before merge.
 
 - [x] Phase 7: Concept Foundation (shared abstractions)
 - [x] Phase 8: Developer Day — Home Office (new room)
-- [ ] Phase 8b: Developer Day — Cubicle + Office Kitchen (new rooms, room nav)
+- [x] Phase 8b: Developer Day — Cubicle + Office Kitchen (new rooms, room nav)
 - [x] Phase 9: Adventurer Day (Tavern reframe)
 - [ ] Phase 10 (stretch): Wizard Day (Dungeon reframe) + Cook Day (Kitchen reframe)
