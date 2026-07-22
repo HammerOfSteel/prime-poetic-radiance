@@ -5,6 +5,7 @@ import { createGrainTexture, createWoodGrainTexture, createSkyGradientTexture, c
 import { useSceneStore } from '../state/sceneStore';
 import { LIGHTING_PRESETS } from '../engine/lightingPresets';
 import { KitchenAtmosphere } from './KitchenAtmosphere';
+import { InteractiveProp } from './InteractiveProp';
 
 const NIGHT_STAR_COUNT = 15;
 const NIGHT_STAR_X_RANGE: [number, number] = [-7.6, -2.4];
@@ -274,6 +275,17 @@ export function Kitchen() {
           <meshToonMaterial color={color} gradientMap={gradientMap} />
         </mesh>
       ))}
+      {/* Cook's busywork props: mixing bowl + whisk on the counter */}
+      <InteractiveProp position={[-5.5, 3.35, -3.6]} baseScale={[1, 1, 1]}>
+        <mesh castShadow receiveShadow data-kind="mixing-bowl">
+          <cylinderGeometry args={[0.28, 0.18, 0.22, 16]} />
+          <meshToonMaterial color="#dce8e0" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0.05, 0.2, 0]} rotation={[0, 0, Math.PI / 8]} data-kind="whisk-handle">
+          <cylinderGeometry args={[0.02, 0.02, 0.35, 8]} />
+          <meshToonMaterial color="#c9975f" gradientMap={gradientMap} />
+        </mesh>
+      </InteractiveProp>
       <KitchenAtmosphere lightingPreset={lightingPreset} kettlePosition={KETTLE_STEAM_ORIGIN} />
     </>
   );

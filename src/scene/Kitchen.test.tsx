@@ -68,4 +68,10 @@ describe('Kitchen', () => {
     const nightPoints = nightRenderer.scene.findAllByType('Points');
     expect(nightPoints.length).toBe(2);
   });
+
+  it('renders the Cook busywork prop: mixing bowl + whisk', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<Kitchen />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'mixing-bowl' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'whisk-handle' }).length).toBe(1);
+  });
 });

@@ -8,4 +8,10 @@ describe('DungeonRoom', () => {
     const meshes = renderer.scene.children.filter((child) => child.type === 'Mesh');
     expect(meshes.length).toBeGreaterThanOrEqual(3);
   });
+
+  it('renders the wizard busywork props: cauldron and spellbook', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<DungeonRoom />);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'cauldron-body' }).length).toBe(1);
+    expect(renderer.scene.findAllByProps({ 'data-kind': 'spellbook-cover' }).length).toBe(1);
+  });
 });

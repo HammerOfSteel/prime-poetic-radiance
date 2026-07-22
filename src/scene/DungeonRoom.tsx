@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { RoundedBox } from '@react-three/drei';
 import { createToonGradientMap } from './toonGradient';
+import { InteractiveProp } from './InteractiveProp';
 
 /** Static dungeon interior: rough stone floor/walls, a couple of unlit
  * wall-torch props, and a chain accent for texture. Mirrors Kitchen.tsx's
@@ -41,6 +42,29 @@ export function DungeonRoom() {
       <RoundedBox args={[6, 0.4, 2]} radius={0.05} smoothness={4} position={[-5, 0.2, -1]} castShadow receiveShadow>
         <meshToonMaterial color="#5a5a60" gradientMap={gradientMap} />
       </RoundedBox>
+
+      {/* Wizard's alchemy-table busywork props: bubbling cauldron + spellbook */}
+      <InteractiveProp position={[1, 0.6, -2]} baseScale={[1, 1, 1]}>
+        <mesh castShadow receiveShadow data-kind="cauldron-body">
+          <cylinderGeometry args={[0.4, 0.3, 0.5, 16]} />
+          <meshToonMaterial color="#2b2b30" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0, 0.28, 0]} data-kind="cauldron-glow">
+          <cylinderGeometry args={[0.36, 0.36, 0.05, 16]} />
+          <meshToonMaterial color="#3a3a42" gradientMap={gradientMap} emissive="#7a3ce8" emissiveIntensity={1.2} />
+        </mesh>
+      </InteractiveProp>
+
+      <InteractiveProp position={[-3, 0.55, -1.8]} baseScale={[1, 1, 1]}>
+        <mesh castShadow data-kind="spellbook-cover">
+          <boxGeometry args={[0.4, 0.06, 0.5]} />
+          <meshToonMaterial color="#4a1f5a" gradientMap={gradientMap} />
+        </mesh>
+        <mesh position={[0, 0.04, 0]} data-kind="spellbook-pages">
+          <boxGeometry args={[0.36, 0.03, 0.46]} />
+          <meshToonMaterial color="#d9c496" gradientMap={gradientMap} />
+        </mesh>
+      </InteractiveProp>
     </>
   );
 }
