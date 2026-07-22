@@ -84,19 +84,96 @@ micro-interactions per finding #6) plus a stronger day/night or fixed-mood
 atmosphere pass (per findings #4-5) and consistent hover affordance
 (per findings #1-2) — no new core mechanic, no verb menus, no inventory.
 
+## Research: What Actually Makes a Dev's Day (and Why It's Fun to Sim)
+
+Real developer-day research (Scrum/Agile daily-standup conventions,
+common WFH-vs-office culture) surfaces concrete, game-able beats beyond
+"stare at code":
+
+- **Daily stand-up** — a short (traditionally ~15 min, deliberately kept
+  brief by literally standing) sync: "what I did yesterday / what I'm
+  doing today / blockers." A great comedic/cozy micro-scene: a clock
+  hotspot or calendar prop that, when clicked, plays a brief "stand-up"
+  vignette (a few static avatar silhouettes + a speech-bubble carousel of
+  canned stand-up lines, no real dialogue system needed).
+- **Code review / PR approval** — the single most universally-relatable
+  "office dev" task outside of typing code. A monitor hotspot showing a
+  mock diff/PR view; clicking "Approve"/"Request changes" buttons (pure
+  flavor, always succeeds, no real logic) triggers a little confetti/
+  checkmark burst — satisfying "busywork" payoff per point-and-click best
+  practice (juice without consequence).
+- **Coffee/break culture** — the office-kitchen coffee run is a genuinely
+  loved "cozy sim" beat (see games like *Coffee Talk*, *A Short Hike*'s
+  incidental social beats): a separate small **office kitchen** room
+  becomes a second playable stage purely for a coffee-break loop (grab a
+  mug, hit brew, chat-bubble small talk with an NPC prop), distinct from
+  the focused desk room.
+- **Cubicle vs. home office contrast** — real dev-life anecdotes
+  consistently draw humor from the contrast between cozy WFH (pet on
+  desk, personal mug, plants) and sterile open-plan cubicle life
+  (beige partitions, motivational poster, standing desk). Presenting
+  both as alternate *selectable* room skins for the same Developer
+  role (not two separate roles) mirrors how real devs actually
+  experience "a day in the life" differently depending on where they
+  work, and it's a cheap, high-charm way to 2x the room content by
+  reusing the same board/atmosphere/prop architecture with a re-skin.
+- **Meeting fatigue as a running gag** — a subtle recurring background
+  gag (a "meetings today" sticky-note counter that increments, a
+  muted video-call window prop with a frozen "you're on mute" avatar)
+  lands well with the target audience (developers) without needing any
+  real simulation — it's set dressing, not a system.
+
+**Design conclusion:** the Developer role becomes a **mini multi-room
+"day"** rather than a single static room — Home Office, Cubicle (an
+alternate skin/room for the same desk-work loop), and Office Kitchen (a
+distinct small room for the coffee-break beat) — connected via the
+existing scene-switcher pattern (just more `SceneId` entries), each with
+its own 1-2 signature busywork props tied to a real, specific developer
+ritual (stand-up, PR review, coffee break) rather than generic desk
+clutter. This adds replay charm precisely because each room maps to a
+relatable, funny, specific daily-life beat instead of being "the same
+desk three times."
+
 ## "Day in the Life of X" Roster
 
-| X | Room reuse | New/adjusted |
+| X | Room(s) | New/adjusted |
 |---|---|---|
-| **Developer** | New room (repurposes/rethemes the existing Kitchen-style "desk" framing, or a new office room) | Desk, monitor(s), coffee mug, rubber duck, sticky notes as extra magnet-adjacent flavor. Word theme: `developer` (code/coffee/bug/deploy vocabulary). |
+| **Developer** | 3 new rooms: **Home Office**, **Cubicle** (alt skin), **Office Kitchen** | See "Developer Sub-Rooms" below — stand-up, PR-review, and coffee-break busywork beats, each in its own small room, all sharing one `developer` word theme. |
 | **Adventurer** | Existing **Tavern** room | Already closest fit conceptually (fantasy tavern-board is literally an adventurer's quest noticeboard) — this phase mostly *reframes/extends* the existing Tavern Atmosphere work with adventurer-flavored busywork props (whetstone, map table, coin pouch) rather than building a new room from scratch. |
 | *(stretch, not required for MVP)* **Wizard** | Existing **Dungeon** room | Dungeon/tablet already reads as an arcane study; reframe as "a day in the life of a dungeon-keeping wizard" with alchemy-table busywork props. |
 | *(stretch)* **Cook/Baker** | Existing **Kitchen** room | Kitchen already IS a kitchen; lightest-touch reframe of all three — mostly copy/naming/flavor-text and word-theme tuning, not new geometry. |
 
 This roster lets every existing room keep its geometry/investment while
-gaining a job/day framing, and only the **Developer** room needs to be
-built from scratch. Adventurer is the other headline new concept
-(explicitly requested), reusing the almost-finished Tavern work.
+gaining a job/day framing. The **Developer** role is the most ambitious
+new content (3 small rooms instead of 1), specifically because "office
+life" research shows the fun comes from the *contrast and variety* of
+daily beats, not from one static desk. Adventurer is the other headline
+new concept (explicitly requested), reusing the almost-finished Tavern
+work.
+
+### Developer Sub-Rooms (detail)
+
+1. **Home Office** (cozy) — plants, pet bed/cat prop, personal mug,
+   warm desk lamp, window with (optional) day/night light. Signature
+   busywork prop: **rubber duck** (click → squeak/wiggle, classic
+   "rubber duck debugging" in-joke) + **coffee mug** (steam/refill).
+2. **Cubicle** (funny/sterile contrast) — beige fabric partition walls,
+   motivational poster prop, standing-desk converter, "meetings today"
+   sticky-note tally that increments on click (running gag, no real
+   state persistence needed — just a fun visual counter that resets on
+   scene reload). Signature busywork prop: **video-call window** ("You
+   are on mute" frozen avatar, click → muted-mic-shake animation) +
+   **calendar/clock prop** → triggers the stand-up vignette (canned
+   speech-bubble carousel).
+3. **Office Kitchen** (social/break) — coffee machine, mug rack, small
+   round table, NPC silhouette prop for incidental small talk. Signature
+   busywork prop: **coffee machine** (click → brew animation + steam) +
+   **snack jar** (click → lid-pop/jump animation).
+
+All three still center on the same magnet-board poetry mechanic (each
+gets its own small board — e.g. a corkboard/monitor/whiteboard — sized
+appropriately) and share one `developer` `wordTheme`; the busywork props
+are what differentiate the rooms tonally.
 
 ## Phase TODO Folders
 
@@ -104,8 +181,11 @@ built from scratch. Adventurer is the other headline new concept
   theme system extension, hotspot/"busywork prop" abstraction, per-room
   metadata for the "Day in the Life" framing (title card / role label in
   HUD), research doc.
-- `todo/phase-8-developer-day/todo.md` — new Developer room + board +
-  atmosphere + busywork props + word bank.
+- `todo/phase-8-developer-day/todo.md` — new Developer rooms: Home
+  Office (base implementation) + shared word bank/templates.
+- `todo/phase-8b-developer-cubicle-and-kitchen/todo.md` — Cubicle
+  (alt-skin room) + Office Kitchen room, stand-up vignette, PR-review
+  mini-interaction, meeting-tally gag, room-to-room navigation.
 - `todo/phase-9-adventurer-tavern-day/todo.md` — reframe/extend existing
   Tavern room with Adventurer busywork props + HUD role labeling.
 - `todo/phase-10-stretch-additional-days/todo.md` — optional Wizard
@@ -119,6 +199,7 @@ passing before merge.
 ## Master Checklist
 
 - [ ] Phase 7: Concept Foundation (shared abstractions)
-- [ ] Phase 8: Developer Day (new room)
+- [ ] Phase 8: Developer Day — Home Office (new room)
+- [ ] Phase 8b: Developer Day — Cubicle + Office Kitchen (new rooms, room nav)
 - [ ] Phase 9: Adventurer Day (Tavern reframe)
 - [ ] Phase 10 (stretch): Wizard Day (Dungeon reframe) + Cook Day (Kitchen reframe)
