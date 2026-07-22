@@ -9,6 +9,10 @@ verse. Built with Tauri, React, TypeScript, and React Three Fiber.
 See `docs/superpowers/specs/` for the project roadmap and per-phase design
 docs, and `docs/superpowers/plans/` for implementation plans.
 
+See `todo/overview_todo.md` for the "Day in the Life of X" concept
+(point-and-click "day in the life" sim rooms — Developer, Adventurer, and
+stretch reframes) and `todo/phase-*/todo.md` for its per-phase task lists.
+
 ## Development
 
 ```bash
